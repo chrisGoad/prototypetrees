@@ -63,7 +63,7 @@ function mextract(fls) {
 }
 
 function mkPath(which,version,mini,es5) {
-  return "www/js/"+(es5?'es5_':'')+which+"-"+version+(mini?".min":"")+".js";
+  return "js/"+(es5?'es5_':'')+which+"-"+version+(mini?".min":"")+".js";
 }
 
 function mkModule(which,version,contents,cb) {
