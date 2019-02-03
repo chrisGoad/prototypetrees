@@ -372,9 +372,6 @@ const genMainPage = function (cb) {
     dom.svgMain.contents=core.root;
     core.root.__sourceUrl = source;
   }
-  $('.mainTitle').click(function () {
-    location.href = "/";
-  });
     $('body').css({"background-color":"#eeeeee"});
     layout();
     if (cb) {

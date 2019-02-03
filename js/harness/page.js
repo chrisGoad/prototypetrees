@@ -105,8 +105,8 @@ const layout = function(noDraw) { // in the initialization phase, it is not yet 
   let ar = 0.48;
   let wpad = 5;
   let vpad = 20;//minimum sum of padding on top and bottom
-  let awinwid = $(window).width();
-  let awinht = $(window).height();
+  let awinwid = window.innerWidth;//$(window).width();
+  let awinht = window.innerHeight;//$(window).height();
   let pwinwid = awinwid - (2 * wpad);
   let pwinht = awinht - (2 * vpad);
   if (pwinht < ar * pwinwid) { // the page is bounded by height 
