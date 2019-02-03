@@ -1,23 +1,23 @@
 /*
 
 A very tiny and simple webpack-ish tool.
-Concats files, and babels and minimizes them.
+It oncats files,  minimizes, and gzips them.
+
 Usage:
 
-cd c:\prototypetrees
+cd <prototypetrees-root>
+
 node admin/assemble.js <module>
 
 */
-var what = process.argv[2];
-var noMinify = Boolean(process.argv[3]);
-console.log(noMinify);
-var versions = require("./versions.js");
+let what = process.argv[2];
+let noMinify = Boolean(process.argv[3]);
+let versions = require("./versions.js");
 
  
-var fs = require('fs');
-//var minify = require('minify');
-var zlib = require('zlib');    
-var babel = require("babel-core");
+let fs = require('fs');
+let zlib = require('zlib');    
+let babel = require("babel-core");
 
 
 let fileLists = {};
@@ -27,35 +27,34 @@ const prepend = function (what,arr) {
 }
 
 
-fileLists['core'] = prepend('core',["root","tree","exception","update","instantiate","serialize","deserialize","pageutils",
+fileLists.core = prepend('core',["root","tree","exception","update","instantiate","serialize","deserialize","pageutils",
                   "install","xpath","log","replace","spread"]);
-fileLists['geom'] = prepend("geom",["geom","geometric_object"]); 
-fileLists['dom'] = prepend('dom',["environment","data","dom1","jxon","svg","html","domstringify","svg_serialize"]);
-fileLists['harness']   = ['harness/environment','harness/install','harness/page','harness/init_page','harness/uiStub'];                         
-fileLists['lightbox'] = ["lightbox/lightbox"];
+fileLists.geom = prepend("geom",["geom","geometric_object"]); 
+fileLists.dom = prepend('dom',["environment","data","dom1","jxon","svg","html","domstringify","svg_serialize"]);
+fileLists.harness  = prepend('harness',['environment','install','page','init_page','uiStub']);                         
 
 function doGzip(file,cb) {
   console.log("gzipping ",file);
-  var gzip = zlib.createGzip();
-  var inp = fs.createReadStream(file);
-  var out = fs.createWriteStream(file+'.gz');
+  let gzip = zlib.createGzip();
+  let inp = fs.createReadStream(file);
+  let out = fs.createWriteStream(file+'.gz');
   inp.pipe(gzip).pipe(out);
   out.on('close',cb);
 }
-let isPrivate = false;
+
 function fullName(f) {
   return 'js/'+f+".js";
 }
 
 function getContents(fl) {
-  var fln = fullName(fl);
+  let fln = fullName(fl);
   console.log("Reading from ",fln);
-  var cn = ""+fs.readFileSync(fln)
+  let cn = ""+fs.readFileSync(fln);
   return cn;
 }
 
 function mextract(fls) {
-  var rs = "";
+  let rs = "";
   fls.forEach(function (fl) {
     rs += getContents(fl);
   });
@@ -66,10 +65,10 @@ function mkPath(which,version,mini,es5) {
   return "js/"+(es5?'es5_':'')+which+"-"+version+(mini?".min":"")+".js";
 }
 
-function mkModule(which,version,contents,cb) {
-  console.log('mkModule',which,version,'isPrivate',isPrivate);
-  var path = mkPath(which,version,0);
-  var minpath = mkPath(which,version,1);
+function mkModule(which,version,contents) {
+  console.log('mkModule',which,version);
+  let path = mkPath(which,version,0);
+  let minpath = mkPath(which,version,1);
   console.log("Saving to path ",path);  
   fs.writeFileSync(path,contents);
   let minified;
@@ -83,24 +82,12 @@ function mkModule(which,version,contents,cb) {
     console.log("gzipping done");
   });
 }
-/*
-var stdClose = '\n})(prototypeJungle);\n';
-var stdOpen = '"use strict";\n(function (pj) {\n';
-
-stdOpen = '';
-stdClose = '';
-*/
-//var minClose = '\nreturn pj;\n})()\n';
-//var addOns = {'minimal':minClose,'firebase_only':minClose,'catalog_editor':stdClose,'editor':stdClose,'code_editor':stdClose};
-
-//var introducePJ;// = getContents('core/pj') ;
 
 function buildModule() {
   let fls = fileLists[what];
   if (!fls) {
     console.log('No such module: ',what);
   }
- // var cn = addOpen + mextract(fls) + addClose;
   let cn = mextract(fls);
   mkModule(what,versions[what],cn);
 }
