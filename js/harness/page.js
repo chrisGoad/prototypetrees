@@ -73,14 +73,14 @@ __addChildren([
    
     svgDiv = html.Element.mk('<div id="svgDiv" draggable="true" style="position:absolute;height:400px;width:600px;background-color:white;border:solid thin black;display:inline-block"/>').
     __addChildren([
-      noteDiv = html.Element.mk('<div style="font:10pt arial;background-color:white;position:absolute;top:0px;left:90px;padding-left:4px;border:solid thin black"/>').__addChildren([
+      /*noteDiv = html.Element.mk('<div style="font:10pt arial;background-color:white;position:absolute;top:0px;left:90px;padding-left:4px;border:solid thin black"/>').__addChildren([
         noteSpan = html.Element.mk('<span>Click on things to adjust them. Hierarchy navigation:</span>'),
         upBut =html.Element.mk('<div class="roundButton">Up</div>'), 
         downBut =html.Element.mk('<div class="roundButton">Down</div>'),
         topBut =html.Element.mk('<div class="roundButton">Top</div>')
-        ]),
+        ]),*/
         svgMessageDiv = html.Element.mk('<div style="display:none;margin-left:auto;padding:40px;margin-right:auto;width:50%;margin-top:20px;border:solid thin black">AAAAUUUU</div>')
-     ])  
+     ]) 
 
  ])
 ])

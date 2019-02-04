@@ -1,4 +1,4 @@
-ProtoPedia
+Prototype Trees
 ===============
 
 There is a build process for the site, involving the script 
