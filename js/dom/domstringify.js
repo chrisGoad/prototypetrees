@@ -1,5 +1,5 @@
-
-
+// Copyright 2019 Chris Goad
+// License: MIT
 
 // some state of an item is not suitable for saving (eg all of the dom links). This sta
 

@@ -1,4 +1,6 @@
-   
+// Copyright 2019 Chris Goad
+// License: MIT
+
 const  svg = codeRoot.set('svg',core.ObjectNode.mk());//just for supporting an old naming scheme svg.Element, as a synonym for dom.SvgElement
 const mkWithVis = function (pr) {
   let rs = Object.create(pr);
@@ -1304,5 +1306,8 @@ const newDomItem = function () {
 core.setItemConstructor(newDomItem);
 
 
+const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];
+
+
 export {SvgRoot,SvgElement,tag as SvgTag,setSvgMain,svgMain,unhighlight,svg,highlightNodes,
-        highlightExtraNode,centerOnOrigin,fullUpdate};
+        highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties};

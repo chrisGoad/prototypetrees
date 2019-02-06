@@ -1,6 +1,6 @@
+// Copyright 2019 Chris Goad
+// License: MIT
 
-
-//let geom = core.geom;
 const domr = codeRoot.set("dom",core.ObjectNode.mk());
 
 /* the two varieties of dom elements are svg.shape and html.Element

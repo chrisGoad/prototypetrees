@@ -1,10 +1,4 @@
-// Copyright 2017 Chris Goad
-// License: MIT
-//import {pj} from 'pj.js';
-//import {build as build1} from 'tree.js';
-//build1(pj);
-
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 /* The central structure is a tree, made of 2 kinds of internal nodes (pj.Object,pj.Array), 
  * and leaves which are of primitive type (numbers,boolean,null,strings), or are functions.

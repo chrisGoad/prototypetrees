@@ -1,3 +1,6 @@
+// Copyright 2019 Chris Goad
+// License: MIT
+
 import * as core from "/js/core-1.1.0.min.js";
 
 let codeRoot = core.codeRoot;

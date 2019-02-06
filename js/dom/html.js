@@ -1,4 +1,5 @@
-
+// Copyright 2019 Chris Goad
+// License: MIT
 
 let html =  codeRoot.set("html",core.ObjectNode.mk());
 

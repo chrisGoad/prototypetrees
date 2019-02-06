@@ -25,17 +25,17 @@ const genMainPage = function (cb) {
   }
   mainPage = buildPage();//mpg
   mpg.__addToDom();
-  if (svgDiv) {
-    setupSvgDiv();
-    core.setRoot(SvgElement.mk('<g/>')); // to be replaced by incoming item, usually
-    core.root.set('transform',dom.vars.defaultTransform);
-    dom.svgMain.contents=core.root;
-    core.root.__sourceUrl = source;
+  setupSvgDiv();
+  core.setRoot(SvgElement.mk('<g/>')); // to be replaced by incoming item, usually
+  core.root.set('transform',dom.vars.defaultTransform);
+  dom.svgMain.contents=core.root;
+  core.root.__sourceUrl = source;
+  layout();
+  installMainItem(source);
+  return;
+  if (cb) {
+    cb();
   }
-    layout();
-    if (cb) {
-      cb();
-    }; 
 }
 
 let mainGetVars = {'source':true,'intro':true,'data':true};
@@ -71,28 +71,22 @@ const processQuery = function() {
   if (q.fit) {
     fitFactor = Number(q.fit);
   }
-  let settings = {};
-  for (let s in q) {
-    if (!mainGetVars[s]) {
-      let qs = q[s];
-      let nqs = Number(qs);
-      settings[s] = isNaN(nqs)?qs:nqs;
-    }
-  }
-  settings = settings;
 }  
 
 let userName,directory;
-let pageInitialized = false; // to prevent repeats, which firebase will sometimes invoke via onIdTokenChanged 
+let pageInitialized = false; // to prevent repeats, which firebase will sometimes invoke via onIdTokenChanged
+
 const initPage = function () {
   debugger;
   pageInitialized = true;
   processQuery();
   dom.vars.fitStdExtent = !(source);
-  genMainPage(afterPageGenerated);
+  genMainPage();
+
+ // genMainPage(afterPageGenerated);
 }
   
-
+/*
 const afterPageGenerated = function (doNotInstall) {
   if (doNotInstall) {
      return;
@@ -103,6 +97,6 @@ const afterPageGenerated = function (doNotInstall) {
     finishMainInstall();
   }
 }
-
+*/
 export {initPage,userName,directory};
     

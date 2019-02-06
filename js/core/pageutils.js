@@ -1,4 +1,4 @@
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 // minimal utilities needed for a ProtoPedia web page (used in the minimal and firebase_only modules)

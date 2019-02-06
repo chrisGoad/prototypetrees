@@ -1,4 +1,4 @@
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* When a Object has a method called update, the state of that node is maintained by application of that method

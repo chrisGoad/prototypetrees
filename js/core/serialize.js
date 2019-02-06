@@ -1,4 +1,4 @@
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* Serialization of prototype trees.

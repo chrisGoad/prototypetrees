@@ -1,4 +1,4 @@
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* This installs components implemented by js scripts. The scripts should have the form
@@ -109,6 +109,7 @@ const httpGetForInstall = function (iurl,cb) {
 
 
 const loadjs = function (iurl,requester) {
+ debugger;
     log('install','loadjs',iurl,' from ',requester);
     loadedUrls.push(iurl);
     vars.mapUrl(iurl,function (url) {
@@ -126,7 +127,6 @@ let loadedScripts = {};
 let evaluatedScripts = {};
 let requireActions,requireEdges,installErrorSource,requireRoot,currentRequire;
 let afterInstall;
-let needToplevel = true;//
 let requiresInstalled = false;
 
 const resetInstalledItems = function () {
@@ -446,14 +446,8 @@ let afterLoadTop;
 
 const loadTopDefs = function (cb) {
   afterLoadTop = cb;
-  needToplevel = false;
-  let host = window.location.host;
-  let local = beginsWith(host,'127');
-  if (local) {
-    loadjs('http://127.0.0.1:3000/topdefs.js');
-  } else {
-    loadjs('https://protopedia.org/topdefs.js');
-  }
+  // binds globals to the modules
+  loadjs('/topdefs.js');
 }
 
 const install = function (isrc,cb) {
@@ -465,32 +459,25 @@ const install = function (isrc,cb) {
     cb(undefined,rs);
     return;
   }
-  const next = function () {
-    resetLoadVars();
-    afterInstall = cb;
-    requireRoot = src;
-    if (endsIn(src,'.item')) {
-      loadItem(src);
-      return;
-    }
-    currentRequire = src;
-    let ldScript = loadedScripts[src];
-    if (ldScript) {
-      evalWithCatch(src,ldScript);
-    } else {
-      if (beginsWith(src,'http'))  {
-        loadjs(src,requester);
-      } else {
-        httpGetForInstall(src, function (err,rs) {
-          evalWithCatch(currentRequire,rs);
-        });
-      }
-    }
+  resetLoadVars();
+  afterInstall = cb;
+  requireRoot = src;
+  if (endsIn(src,'.item')) {
+    loadItem(src);
+    return;
   }
-  if (needToplevel) {
-    loadTopDefs(next);
+  currentRequire = src;
+  let ldScript = loadedScripts[src];
+  if (ldScript) {
+    evalWithCatch(src,ldScript);
   } else {
-    next();
+    if (beginsWith(src,'http'))  {
+      loadjs(src,requester);
+    } else {
+      httpGetForInstall(src, function (err,rs) {
+        evalWithCatch(currentRequire,rs);
+      });
+    }
   }
 }
 
@@ -499,7 +486,7 @@ const findPrototypeWithUrl = function (url) {
   if (!root.prototypes) {
     return undefined;
   }
-  let rs = undefined;
+  let rs;
   forEachTreeProperty(root.prototypes,function (itm) {
     if (itm.__sourceUrl === url) {
       rs = itm;

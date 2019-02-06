@@ -1,3 +1,5 @@
+// Copyright 2019 Chris Goad
+// License: MIT
 
 let data = codeRoot.set("data",core.ObjectNode.mk());
   data.__builtIn = true;

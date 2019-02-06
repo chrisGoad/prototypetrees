@@ -1,3 +1,6 @@
+// Copyright 2019 Chris Goad
+// License: MIT
+
 // the environment for this module
 
 import * as core from "/js/core-1.1.0.min.js";
@@ -11,6 +14,8 @@ const Transform = geom.Transform;
 
 export const vars = core.ObjectNode.mk();
 
+// Copyright 2019 Chris Goad
+// License: MIT
 
 let data = codeRoot.set("data",core.ObjectNode.mk());
   data.__builtIn = true;
@@ -61,9 +66,9 @@ data.LinearScale.dtToImScale = function () {
 data.LinearScale.label = function (dv) {
   return core.nDigits(dv,3);
 }
+// Copyright 2019 Chris Goad
+// License: MIT
 
-
-//let geom = core.geom;
 const domr = codeRoot.set("dom",core.ObjectNode.mk());
 
 /* the two varieties of dom elements are svg.shape and html.Element
@@ -915,7 +920,9 @@ const domToElement = function (dm,forXML) {
 }
 
 
-   
+// Copyright 2019 Chris Goad
+// License: MIT
+
 const  svg = codeRoot.set('svg',core.ObjectNode.mk());//just for supporting an old naming scheme svg.Element, as a synonym for dom.SvgElement
 const mkWithVis = function (pr) {
   let rs = Object.create(pr);
@@ -2221,8 +2228,12 @@ const newDomItem = function () {
 core.setItemConstructor(newDomItem);
 
 
+const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];
+
+
 export {SvgRoot,SvgElement,tag as SvgTag,setSvgMain,svgMain,unhighlight,svg,highlightNodes,
-        highlightExtraNode,centerOnOrigin,fullUpdate};
+        highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties};// Copyright 2019 Chris Goad
+// License: MIT
 
 let html =  codeRoot.set("html",core.ObjectNode.mk());
 
@@ -2515,8 +2526,8 @@ html.Element.$empty = function () {
 }
 
 export {html};
-
-
+// Copyright 2019 Chris Goad
+// License: MIT
 
 // some state of an item is not suitable for saving (eg all of the dom links). This sta
 
@@ -2550,7 +2561,8 @@ const restoreAfterSave = function (itm) {
     
 core.afterStringify.push(restoreAfterSave);
 
-
+// Copyright 2019 Chris Goad
+// License: MIT
 
 vars.svgIncludeIds = true;
 

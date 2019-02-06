@@ -1,4 +1,4 @@
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* a trivial exception setup.  System is meant to indicate which general system generated the error

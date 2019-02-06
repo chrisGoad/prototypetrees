@@ -1,7 +1,7 @@
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
-/* A normal setup for managing pj items,  is for there to be a current item which
+/* A normal setup for managing items,  is for there to be a current item which
  * is being manipulated in a running state, a state which contains various other items installed from external sources.
  * Each node in such a set up can be assigned a path, call it an 'xpath' (x for 'possibly external'). The first element
  * of this path is either '.' (meaning the current item), '' (meaning pj itself)  or the url of the source of the item.

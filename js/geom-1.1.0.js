@@ -1,3 +1,6 @@
+// Copyright 2019 Chris Goad
+// License: MIT
+
 import * as core from "/js/core-1.1.0.min.js";
 
 let codeRoot = core.codeRoot;
@@ -1030,6 +1033,9 @@ Rectangle.randomPoint = function () {
 
 export {movetoInGlobalCoords,toOwnCoords,toPoint,angleToDirection,Point,Rectangle,Transform,
         LineSegment,boundsForRectangles};
+// Copyright 2019 Chris Goad
+// License: MIT
+
 // a geometric object is a core.Object with a transform property.  In applications, core.root is typically geometric, geometric
 // descendants constitute the visible state. Some geometric objects have width and height, and possibly dimension properties.
 

@@ -1,3 +1,6 @@
+// Copyright 2019 Chris Goad
+// License: MIT
+
 // a geometric object is a core.Object with a transform property.  In applications, core.root is typically geometric, geometric
 // descendants constitute the visible state. Some geometric objects have width and height, and possibly dimension properties.
 

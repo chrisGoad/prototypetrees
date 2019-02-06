@@ -8,7 +8,7 @@ Included is the implementation of prototype trees in general, but also as elabor
 
 A related project, [ProtoPedia](https://protopedia.org), is  an open diagramming system based on prototype trees, and consitututes a proof of concept for the technology.
 
-Simple examples of using this code (only the open source part) appear over at [https://protopedia.org/coreExamples.html](https://protopedia.org/coreExamples.html).
+A simple test harness, with examples, can be seen over at [https://protopedia.org/coreExamples.html](https://protopedia.org/coreExamples.html). This test harness illustrates direct use of the open source code; ProtoPedia has additional capabilities.
 Also, documentation can be found at the ProtoPedia site. Sections 1 - 11  in the [coding guide](https://protopedia.org/doc/code.html) cover the workings of prototype trees.
 
 If you fork this repo, have a look at the README for [/admin](../../tree/master/admin).
