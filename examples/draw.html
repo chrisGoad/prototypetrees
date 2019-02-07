@@ -35,8 +35,11 @@ window.addEventListener("DOMContentLoaded", function() {
   core.vars.activeConsoleTags = ['error'];//'install'];//'control'
   dom.vars.stdExtent = geom.Point.mk(200,200); // if there is no initial content, this is the area in image space originally in view
   core.tlog('doc ready');
-  harness.initPage();
+  //harness.initPage();
   core.tlog('page initialized');
+  core.loadTopDefs(harness.initPage);
+ // core.loadjs('/topdefs.js'); // binds globals to the modules
+
 });
 </script>
  

@@ -1,6 +1,6 @@
 // sample code - a randomly chosen snippet
-// modify at will, and click "Run" to see its output
- core.require('/shape/circle.js',function (circlePP) {
+
+ core.require('/examples/circle.js',function (circlePP) {
   let item = svg.Element.mk('<g/>');// the root of the diagram we are assembling
   // the circle prototype
   let circleP = item.set('circleP',circlePP.instantiate()).hide();

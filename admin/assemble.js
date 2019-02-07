@@ -31,7 +31,7 @@ fileLists.core = prepend('core',["root","tree","exception","update","instantiate
                   "install","xpath","log","replace","spread"]);
 fileLists.geom = prepend("geom",["geom","geometric_object"]); 
 fileLists.dom = prepend('dom',["environment","data","dom1","jxon","svg","html","domstringify","svg_serialize"]);
-fileLists.harness  = prepend('harness',['environment','install','page','init_page','uiStub']);                         
+fileLists.harness  = prepend('harness',['environment','install','page','init_page']);                         
 
 function doGzip(file,cb) {
   console.log("gzipping ",file);

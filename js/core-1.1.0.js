@@ -1,10 +1,4 @@
-// Copyright 2017 Chris Goad
-// License: MIT
-//import {pj} from 'pj.js';
-//import {build as build1} from 'tree.js';
-//build1(pj);
-
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 /* The central structure is a tree, made of 2 kinds of internal nodes (pj.Object,pj.Array), 
  * and leaves which are of primitive type (numbers,boolean,null,strings), or are functions.
@@ -51,7 +45,7 @@ const defineArrayNodeMethod = function (name,method) {
 }
   
 
-export {setRoot,root,ObjectNode,ArrayNode,codeRoot,vars,defineArrayNodeMethod};// Copyright 2017 Chris Goad
+export {setRoot,root,ObjectNode,ArrayNode,codeRoot,vars,defineArrayNodeMethod};// Copyright 2019 Chris Goad
 // License: MIT
 
 // tree operations
@@ -1930,7 +1924,7 @@ export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,cr
         isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,
         newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,deepCopy
         };
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* a trivial exception setup.  System is meant to indicate which general system generated the error
@@ -1976,7 +1970,7 @@ const error = function (msg,sys) {
 }
 
 export {error};
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* When a Object has a method called update, the state of that node is maintained by application of that method
@@ -2291,7 +2285,7 @@ const restoreComputed = function (node,stash) {
 
 export {updateRoot,updateParts,isComputed,setUpdateFilter,setDisplayError,displayError,getData,setDataString,
 removeComputed,restoreComputed,resetComputedArray,resetComputedObject,declareComputed};
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 
@@ -2621,7 +2615,7 @@ ObjectNode.__clone = function () {
   } else {
     error("Attempt to clone a non-Object",this.__name);
   }
-}// Copyright 2017 Chris Goad
+}// Copyright 2019 Chris Goad
 // License: MIT
 
 /* Serialization of prototype trees.
@@ -2938,7 +2932,7 @@ const stringify = function (node) {
   return  prettyJSON?JSON.stringify(x,null,4):JSON.stringify(x);
 }
 
-export {stringify,referencePath};// Copyright 2017 Chris Goad
+export {stringify,referencePath};// Copyright 2019 Chris Goad
 // License: MIT
 
 
@@ -3091,7 +3085,7 @@ const deserialize = function (x) {
   return inodes[0];
  
 }
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 // minimal utilities needed for a ProtoPedia web page (used in the minimal and firebase_only modules)
@@ -3203,7 +3197,7 @@ const parseQuerystring = function() {
 }
 
 export {httpGet,beginsWith,endsIn,afterLastChar,beforeLastChar,parseQuerystring,pathExceptLast,pathLast};
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 /* This installs components implemented by js scripts. The scripts should have the form
@@ -3314,6 +3308,7 @@ const httpGetForInstall = function (iurl,cb) {
 
 
 const loadjs = function (iurl,requester) {
+ debugger;
     log('install','loadjs',iurl,' from ',requester);
     loadedUrls.push(iurl);
     vars.mapUrl(iurl,function (url) {
@@ -3331,7 +3326,6 @@ let loadedScripts = {};
 let evaluatedScripts = {};
 let requireActions,requireEdges,installErrorSource,requireRoot,currentRequire;
 let afterInstall;
-let needToplevel = true;//
 let requiresInstalled = false;
 
 const resetInstalledItems = function () {
@@ -3651,14 +3645,8 @@ let afterLoadTop;
 
 const loadTopDefs = function (cb) {
   afterLoadTop = cb;
-  needToplevel = false;
-  let host = window.location.host;
-  let local = beginsWith(host,'127');
-  if (local) {
-    loadjs('http://127.0.0.1:3000/topdefs.js');
-  } else {
-    loadjs('https://protopedia.org/topdefs.js');
-  }
+  // binds globals to the modules
+  loadjs('/topdefs.js');
 }
 
 const install = function (isrc,cb) {
@@ -3670,32 +3658,25 @@ const install = function (isrc,cb) {
     cb(undefined,rs);
     return;
   }
-  const next = function () {
-    resetLoadVars();
-    afterInstall = cb;
-    requireRoot = src;
-    if (endsIn(src,'.item')) {
-      loadItem(src);
-      return;
-    }
-    currentRequire = src;
-    let ldScript = loadedScripts[src];
-    if (ldScript) {
-      evalWithCatch(src,ldScript);
-    } else {
-      if (beginsWith(src,'http'))  {
-        loadjs(src,requester);
-      } else {
-        httpGetForInstall(src, function (err,rs) {
-          evalWithCatch(currentRequire,rs);
-        });
-      }
-    }
+  resetLoadVars();
+  afterInstall = cb;
+  requireRoot = src;
+  if (endsIn(src,'.item')) {
+    loadItem(src);
+    return;
   }
-  if (needToplevel) {
-    loadTopDefs(next);
+  currentRequire = src;
+  let ldScript = loadedScripts[src];
+  if (ldScript) {
+    evalWithCatch(src,ldScript);
   } else {
-    next();
+    if (beginsWith(src,'http'))  {
+      loadjs(src,requester);
+    } else {
+      httpGetForInstall(src, function (err,rs) {
+        evalWithCatch(currentRequire,rs);
+      });
+    }
   }
 }
 
@@ -3704,7 +3685,7 @@ const findPrototypeWithUrl = function (url) {
   if (!root.prototypes) {
     return undefined;
   }
-  let rs = undefined;
+  let rs;
   forEachTreeProperty(root.prototypes,function (itm) {
     if (itm.__sourceUrl === url) {
       rs = itm;
@@ -3739,10 +3720,10 @@ export {httpGetForInstall,loadjs,install,require,debugMode,requireEdges,loadedUr
         findPrototypeWithUrl,loadedScripts,installedItems,resetInstalledItems,afterLoadTop,
         absoluteUrl,loadTopDefs,checkSyntax,assemblyParts,importItem};
         
-        // Copyright 2017 Chris Goad
+        // Copyright 2019 Chris Goad
 // License: MIT
 
-/* A normal setup for managing pj items,  is for there to be a current item which
+/* A normal setup for managing items,  is for there to be a current item which
  * is being manipulated in a running state, a state which contains various other items installed from external sources.
  * Each node in such a set up can be assigned a path, call it an 'xpath' (x for 'possibly external'). The first element
  * of this path is either '.' (meaning the current item), '' (meaning pj itself)  or the url of the source of the item.
@@ -3807,7 +3788,7 @@ const evalXpath = function (root,path) {
 }
 
 export {xpathOf,evalXpath};
-// Copyright 2017 Chris Goad
+// Copyright 2019 Chris Goad
 // License: MIT
 
 
