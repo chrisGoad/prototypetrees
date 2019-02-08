@@ -148,6 +148,8 @@ const deserialize = function (x) {
     installAtomicProperties(i);
     installChildren(i);
   }
-  return inodes[0];
- 
+  let rs = inodes[0];
+  debugger;
+  fixTree(rs); // workaround for a bug
+  return rs; 
 }

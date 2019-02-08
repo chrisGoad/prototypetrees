@@ -109,7 +109,6 @@ const httpGetForInstall = function (iurl,cb) {
 
 
 const loadjs = function (iurl,requester) {
- debugger;
     log('install','loadjs',iurl,' from ',requester);
     loadedUrls.push(iurl);
     vars.mapUrl(iurl,function (url) {

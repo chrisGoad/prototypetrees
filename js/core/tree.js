@@ -1194,6 +1194,15 @@ const containingData = function (node) {
    });
 }
 
+const childName = function (parent,child) {
+  let rs;
+  forEachTreeProperty(parent,function (ch,nm) {
+    if (ch === child) {
+       rs = nm;
+    }
+  });
+  return rs;
+}
 export let removeHooks = [];
 
 // dontRemoveFromArray is used when all of the elements of an array are removed (eg  in removeChildren)
@@ -1215,11 +1224,28 @@ nodeMethod('remove',function (dontRemoveFromArray) {
       parent.splice(idx,1);
     }
   } else {
-    delete parent[__name];
+    let anm = __name;
+    if (parent[anm] !== this)  { // workaround for a bug
+      anm = childName(parent,this);
+      debugger;
+    }
+    delete parent[anm];
   }
   return this;  
 });
 
+const fixTree = function (nd) {  // workaround for a bug
+  forEachDescendant((node) => {
+    if (node !== root) {
+      let pr = node.__parent;
+      let nm = node.__name;
+      if (node !== pr[nm]) {
+        debugger;
+        node.remove();
+      }
+    }
+  },nd);
+}
 
 export let reparentHooks = [];
 
@@ -1868,6 +1894,8 @@ ObjectNode.setActiveProperty = function (prop,value) {
     proto[prop] = value;
   }
 }
+
+
 
 export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,crossTreeLinks,
         mapNonCoreLeaves,treeProperty,mapOwnProperties,lift,forEachTreeProperty,stripInitialSlash,descendantWithProperty,
