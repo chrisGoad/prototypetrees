@@ -1225,7 +1225,7 @@ nodeMethod('remove',function (dontRemoveFromArray) {
     }
   } else {
     let anm = __name;
-    if (parent[anm] !== this)  { // workaround for a bug
+    if (parent[anm] !== this)  { // workaround for the ghost bug, which should be fixed
       anm = childName(parent,this);
       debugger;
     }
@@ -1235,8 +1235,9 @@ nodeMethod('remove',function (dontRemoveFromArray) {
 });
 
 const fixTree = function (nd) {  // workaround for a bug
+  return;
   forEachDescendant((node) => {
-    if (node !== root) {
+    if (node !== nd) {
       let pr = node.__parent;
       let nm = node.__name;
       if (node !== pr[nm]) {
