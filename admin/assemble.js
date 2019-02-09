@@ -28,7 +28,7 @@ const prepend = function (what,arr) {
 
 
 fileLists.core = prepend('core',["root","tree","exception","update","instantiate","serialize","deserialize","pageutils",
-                  "install","xpath","log","replace","spread"]);
+                  "install","xpath","log","replace","spread","history"]);
 fileLists.geom = prepend("geom",["geom","geometric_object"]); 
 fileLists.dom = prepend('dom',["environment","data","dom1","jxon","svg","html","domstringify","svg_serialize"]);
 fileLists.harness  = prepend('harness',['environment','install','page','init_page']);                         
@@ -63,6 +63,7 @@ function mextract(fls) {
 
 function mkPath(which,version,mini,es5) {
   return "js/"+(es5?'es5_':'')+which+"-"+version+(mini?".min":"")+".js";
+
 }
 
 function mkModule(which,version,contents) {

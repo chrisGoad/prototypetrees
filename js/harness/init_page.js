@@ -82,21 +82,7 @@ const initPage = function () {
   processQuery();
   dom.vars.fitStdExtent = !(source);
   genMainPage();
-
- // genMainPage(afterPageGenerated);
 }
   
-/*
-const afterPageGenerated = function (doNotInstall) {
-  if (doNotInstall) {
-     return;
-  }
-  if (svgDiv) {
-    installMainItem(source);
-  } else {
-    finishMainInstall();
-  }
-}
-*/
 export {initPage,userName,directory};
     

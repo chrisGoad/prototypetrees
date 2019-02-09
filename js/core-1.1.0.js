@@ -3226,7 +3226,7 @@ const installDebug = function () {
 const installError = function (src,erm) {
   debugger; //keep
   let where = src==='top'?' at top level':' in '+src;
-  afterInstall(erm + where);
+  afterInstall(erm?(erm + where):where);
 }
 let loadedUrls = [];
 let getCache = {};

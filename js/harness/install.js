@@ -9,7 +9,7 @@ const installMainItem = function (source)  {
   } else  {
     finishMainInstall();
   }
-}
+};
 
 const afterMainInstall = function (e,rs) {
   if (e) {
@@ -37,6 +37,7 @@ const mergeIn = function (dst,src) {
     dst.set(anm,child);
   }); 
 }
+
 const svgInstall = function () {
   let fromItemFile = mainUrl && core.endsIn(mainUrl,'.item');
   if (main && fromItemFile) {
@@ -80,7 +81,7 @@ let fitFactor = 0.8;
 
 const displayError = function (msg) {
   svgMessageDiv.$show();
-  svgMessageDiv.$html('<div style="padding:150px;background-color:white;text-align:center">'+msg+'</div>');
+  svgMessageDiv.$html('<div style="text-align:center">'+msg+'</div>');
 }
 
 core.setDisplayError(displayError);
@@ -101,16 +102,11 @@ const finishMainInstall = function () {
   }
   layout();
   dom.svgMain.fitContents();
- /*    $(window).resize(function() {
+  window.addEventListener('resize', function () {
       layout();
       dom.svgMain.fitContents();
-    });*/
+    });
 }
 
-const displayMessageInSvg = function (msg) {
-  core.root.hide();
-  svgMessageDiv.$show();
-  svgMessageDiv.$html(msg);
-}
 
 
