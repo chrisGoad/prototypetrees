@@ -43,7 +43,7 @@ function doGzip(file,cb) {
 }
 
 function fullName(f) {
-  return 'js/'+f+".js";
+  return `src/${f}.js`;
 }
 
 function getContents(fl) {
@@ -61,8 +61,9 @@ function mextract(fls) {
   return rs;
 }
 
-function mkPath(which,version,mini,es5) {
-  return "js/"+(es5?'es5_':'')+which+"-"+version+(mini?".min":"")+".js";
+function mkPath(which,version,mini) {
+ // return "js/"+(es5?'es5_':'')+which+"-"+version+(mini?".min":"")+".js";
+  return `js/${which}-${version}${mini?".min":""}.js`;
 
 }
 
