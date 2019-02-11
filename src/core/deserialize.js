@@ -149,7 +149,5 @@ const deserialize = function (x) {
     installChildren(i);
   }
   let rs = inodes[0];
-  debugger;
-  fixTree(rs); // workaround for a bug
   return rs; 
 }

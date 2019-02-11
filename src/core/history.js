@@ -24,4 +24,4 @@ const undo = function () {
   revertToState(history.length-2);
 }
 
-export {history,beforeAddToHistoryHookds,addToHistory,afterRevertHooks,revertToState,undo};
+export {history,beforeAddToHistoryHooks,addToHistory,afterRevertHooks,revertToState,undo};
