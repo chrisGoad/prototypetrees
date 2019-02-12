@@ -19,7 +19,6 @@ const setupSvgDiv = function () {
 }
 
 const genMainPage = function (cb) {
-  debugger;
   if (mainPage) {
     return;
   }
@@ -77,7 +76,6 @@ let userName,directory;
 let pageInitialized = false; // to prevent repeats, which firebase will sometimes invoke via onIdTokenChanged
 
 const initPage = function () {
-  debugger;
   pageInitialized = true;
   processQuery();
   dom.vars.fitStdExtent = !(source);

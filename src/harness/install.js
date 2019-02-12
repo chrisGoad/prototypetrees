@@ -41,7 +41,6 @@ const mergeIn = function (dst,src) {
 const svgInstall = function () {
   let fromItemFile = mainUrl && core.endsIn(mainUrl,'.item');
   if (main && fromItemFile) {
-   debugger;
     let svProtos = core.root.prototypes; // loading main may have involved installing prototypes
     core.setRoot(main);
     if (svProtos && main.prototypes) {
@@ -87,7 +86,6 @@ const displayError = function (msg) {
 core.setDisplayError(displayError);
 
 const finishMainInstall = function () {
- debugger;
   let e = installError;
   let emsg;
   
