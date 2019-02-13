@@ -1272,23 +1272,22 @@ nodeMethod('remove',function (dontRemoveFromArray) {
     }
   } else {
     let anm = __name;
-    if (parent[anm] !== this)  { // workaround for the ghost bug, which should be fixed
-      anm = childName(parent,this);
-      debugger;
+    if (parent[anm] !== this)  { // check from ghost bug
+      error('ghost bug back');
     }
     delete parent[anm];
   }
   return this;  
 });
 
-const fixTree = function (nd) {  // workaround for a bug
+const fixTree = function (nd) {  // workaround for ghost bug. Not in use at the moment
   return;
   forEachDescendant((node) => {
     if (node !== nd) {
       let pr = node.__parent;
       let nm = node.__name;
       if (node !== pr[nm]) {
-        debugger;
+        debugger; //keep
         node.remove();
       }
     }
@@ -1722,7 +1721,7 @@ const countDescendants = function (node,fn) {
   return rs;
 }
 
-const numericalSuffix = function (string) {
+const numericalSuf = function (string) {
   let i,c,ln;
   let n = Number(string);
   if (!isNaN(n)) {
@@ -3112,8 +3111,6 @@ const deserialize = function (x) {
     installChildren(i);
   }
   let rs = inodes[0];
-  debugger;
-  fixTree(rs); // workaround for a bug
   return rs; 
 }
 // Copyright 2019 Chris Goad
@@ -4172,4 +4169,4 @@ const undo = function () {
   revertToState(history.length-2);
 }
 
-export {history,beforeAddToHistoryHookds,addToHistory,afterRevertHooks,revertToState,undo};
+export {history,beforeAddToHistoryHooks,addToHistory,afterRevertHooks,revertToState,undo};

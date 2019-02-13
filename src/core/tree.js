@@ -1674,7 +1674,7 @@ const countDescendants = function (node,fn) {
   return rs;
 }
 
-const numericalSuffix = function (string) {
+const numericalSuf = function (string) {
   let i,c,ln;
   let n = Number(string);
   if (!isNaN(n)) {
