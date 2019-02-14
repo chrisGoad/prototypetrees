@@ -1,7 +1,7 @@
 // circle
 
 core.require(function () {
-  debugger;
+
 let item =  svg.Element.mk('<circle/>');
 
 /* adjustable parameters */

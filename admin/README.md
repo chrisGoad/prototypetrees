@@ -1,7 +1,7 @@
 Prototype Trees
 ===============
 
-There is a build process for the site, involving the script 
+There is a build process for this code, involving the script 
 /admin/assemble.js. It stiches up files in the source areas /src/core, /src/geom/, /src/dom/,  and /src/harness
 into combined, minimized, gzipped files such as /js/core-1.1.0.js, /js/core-1.1.0.min.js, and /js/core-1.1.0.min.js.gz
 

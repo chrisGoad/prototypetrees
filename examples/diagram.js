@@ -1,6 +1,5 @@
 
 core.require('/examples/circle.js','/examples/arcArrow.js',function (circlePP,arrowPP) {
-
 let item = svg.Element.mk('<g/>');// the root of the diagram we are assembling
 let circleP = core.installPrototype(circlePP); 
 let arrowP = core.installPrototype(arrowPP);
