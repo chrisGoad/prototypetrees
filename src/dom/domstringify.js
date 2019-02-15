@@ -23,7 +23,7 @@ const stashPreSave = function (itm,needRestore) {
 } 
   
   
-core.beforeStringify.push( function (itm) {stashPreSave(itm,1)});
+core.beforeSerialize.push( function (itm) {stashPreSave(itm,1)});
 
 const restoreAfterSave = function (itm) {
   core.setProperties(itm,stateStash,propsToStash,true,true);//fromOwn,dontCopy
@@ -31,5 +31,5 @@ const restoreAfterSave = function (itm) {
   restoreDom(itm,domStash);
 }
     
-core.afterStringify.push(restoreAfterSave);
+core.afterSerialize.push(restoreAfterSave);
 

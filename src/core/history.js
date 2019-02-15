@@ -1,27 +1,28 @@
 let history = [];
 
-let beforeAddToHistoryHooks = [];
+let beforeSaveStateHooks = [];
 
-const addToHistory = function () {
-  beforeAddToHistoryHooks.forEach((fn) => {fn();});
-  history.push(stringify(root));
+const saveState = function () {
+  beforeSaveStateHooks.forEach((fn) => {fn();});
+  history.push(serialize(root));
 }
 
-let afterRevertHooks = [];
+let afterRestoreStateHooks = [];
 
 
-const revertToState = function (n) {
+
+const restoreState = function (n) {
   let ln = history.length;
   if ((n>=ln) || (n<0)) {
     error('out of bounds'); // will throw if throwOnError is set
     return;
   }
-  root = history[n];
-  afterRevertHooks.forEach((fn) => {fn();});
+  root = deserialize(history[n]);
+  afterRestoreStateHooks.forEach((fn) => {fn();});
 }
 
 const undo = function () {
-  revertToState(history.length-2);
+  restoreState(history.length-1);
 }
 
-export {history,beforeAddToHistoryHooks,addToHistory,afterRevertHooks,revertToState,undo};
+export {history,beforeSaveStateHooks,saveState,afterRestoreStateHooks,restoreState,undo};

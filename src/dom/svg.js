@@ -1306,8 +1306,22 @@ const newDomItem = function () {
 core.setItemConstructor(newDomItem);
 
 
+const installRoot= function (itm) {
+  if (itm) {
+    core.setRoot(itm);
+  }
+  if (svgMain.contents) {
+    dom.removeElement(svgMain.contents);
+  }
+  svgMain.contents=core.root;
+  svgDraw();
+}
+
+core.afterRestoreStateHooks.push(installRoot);
+
+
 const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];
 
 
 export {SvgRoot,SvgElement,tag as SvgTag,setSvgMain,svgMain,unhighlight,svg,highlightNodes,
-        highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties};
+        highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties,installRoot};

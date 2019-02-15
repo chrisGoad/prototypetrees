@@ -21,15 +21,6 @@ const afterMainInstall = function (e,rs) {
   finishMainInstall();
 }
 
-const installAsSvgContents= function (itm) {
-  let mn = dom.svgMain;
-  if (mn.contents) {
-    dom.removeElement(mn.contents);
-  }
-  mn.contents=itm;
-  dom.svgDraw();
-}
-
 const mergeIn = function (dst,src) {
   core.forEachTreeProperty(src,(child) => {
     let nm = child.__name;
@@ -49,14 +40,12 @@ const svgInstall = function () {
   } else if (!core.root) {
     core.setRoot(dom.SvgElement.mk('<g/>'));
   }  
-  let itm = main?main:core.root;
   dom.svgMain.fitFactor = fitFactor;
-  installAsSvgContents(core.root);
+  dom.installRoot();
   if (main && !fromItemFile) {
       core.root.set('main',main);
   }
   let rmain = core.root.main;
-  
   if (rmain) {
     if (rmain.updatePrototype) {
       rmain.updatePrototype();
@@ -69,9 +58,6 @@ const svgInstall = function () {
   dom.fullUpdate();
   if (core.root.draw) {
     core.root.draw(dom.svgMain.__element); // update might need things to be in svg
-  }
-  if (itm.soloInit) { 
-    itm.soloInit(); 
   }
 }
 

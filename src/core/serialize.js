@@ -106,7 +106,7 @@ const referencePath = function (x,root) {
   return (relPath==='')?componentPath:componentPath+relPath;
 }
 
-const serialize = function (root) {
+const encode = function (root) {
   dependencies = {};
   externalReferences = [];
   let nodes = [];
@@ -165,6 +165,8 @@ const serialize = function (root) {
     }
     return rs;
   }
+
+
   
   const findObjects = function () {
   
@@ -299,20 +301,31 @@ const serialize = function (root) {
 
 
     
-export let beforeStringify = [];// a list of callbacks
-export let afterStringify = []; // ditto
-
+let beforeSerialize = [];// a list of callbacks
+let afterSerialize = []; // ditto
+  
+const serialize = function (node) {
+  let srcp = node.__sourceUrl;
+  node.__sourceUrl = undefined;// for reference generaation in externalize
+  beforeSerialize.forEach(function (fn) {fn(node);});
+  let rs = encode(node);
+  node.__sourceUrl = srcp;
+  afterSerialize.forEach(function (fn) {fn(node);});
+  return rs;
+}
 
 let prettyJSON  = false;
 
+
 const stringify = function (node) {
-  let srcp = node.__sourceUrl;
+  /*let srcp = node.__sourceUrl;
   node.__sourceUrl = undefined;// for reference generaation in externalize
   beforeStringify.forEach(function (fn) {fn(node);});
   let x = serialize(node);
   node.__sourceUrl = srcp;
-  afterStringify.forEach(function (fn) {fn(node);});
+  afterStringify.forEach(function (fn) {fn(node);});*/
+  let x = serialize(node);
   return  prettyJSON?JSON.stringify(x,null,4):JSON.stringify(x);
 }
 
-export {stringify,referencePath};
+export {serialize,stringify,referencePath,beforeSerialize,afterSerialize};

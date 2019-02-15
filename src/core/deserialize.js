@@ -151,3 +151,5 @@ const deserialize = function (x) {
   let rs = inodes[0];
   return rs; 
 }
+
+export {deserialize};
