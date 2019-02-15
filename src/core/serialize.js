@@ -318,12 +318,6 @@ let prettyJSON  = false;
 
 
 const stringify = function (node) {
-  /*let srcp = node.__sourceUrl;
-  node.__sourceUrl = undefined;// for reference generaation in externalize
-  beforeStringify.forEach(function (fn) {fn(node);});
-  let x = serialize(node);
-  node.__sourceUrl = srcp;
-  afterStringify.forEach(function (fn) {fn(node);});*/
   let x = serialize(node);
   return  prettyJSON?JSON.stringify(x,null,4):JSON.stringify(x);
 }
