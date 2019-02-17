@@ -1306,7 +1306,7 @@ const newDomItem = function () {
 core.setItemConstructor(newDomItem);
 
 
-const installRoot= function (itm) {
+const installRoot = function (itm) {
   if (itm) {
     core.setRoot(itm);
   }
@@ -1316,6 +1316,9 @@ const installRoot= function (itm) {
   svgMain.contents=core.root;
   svgDraw();
 }
+
+core.vars.installRoot = installRoot;
+core.vars.refresh = svgDraw;
 
 core.afterRestoreStateHooks.push(installRoot);
 
