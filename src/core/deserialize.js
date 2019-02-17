@@ -1,8 +1,6 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
-
-
 // <Section> deserialize  ====================================================
 
 
@@ -106,7 +104,8 @@ const deserialize = function (x) {
     }
   }
   
-  const buildChain = function (chain) {
+  const buildChain = function (ichain) {
+    let chain = ichain.slice(0); // copy it, so that deserialize is idempotent
     chain.reverse();
     let cx;
     chain.forEach(function (code) {
