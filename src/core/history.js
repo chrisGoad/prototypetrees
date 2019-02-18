@@ -11,8 +11,8 @@ let beforeSaveStateHooks = [];
 let lastState;
 
 const addStateToHistory = function () { //complete state, that is
-  lastState = deserialize(serialize(root));
   clearLabels(root);
+  lastState = deserialize(serialize(root));
   let check = collectNodes(lastState,root);// sets the global nodeMap
   if (!check) {
 	 console.log('collectNodes failed');
@@ -23,7 +23,8 @@ const addStateToHistory = function () { //complete state, that is
 }
   
 const saveState = function () {
-  //debugger;
+  debugger;
+  console.log('saveState');
   if (!historyEnabled) {
 	return;
   }
@@ -87,4 +88,4 @@ const undo = function () {
 }
 
 
-export {history,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo};
+export {history,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo,lastState};

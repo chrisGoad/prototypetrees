@@ -279,6 +279,7 @@ const encode = function (root) {
   
   const externalizeCleanup = function () {
     nodes.forEach((node) => {node.__code = undefined;});
+    nodes.forEach((node) => {node.__notHead = undefined;});
     externalItems.forEach((ext) => {ext.__code = undefined;});
     externalReferences.forEach((x) => {x.__referenceString = undefined;});
   }

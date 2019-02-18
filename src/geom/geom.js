@@ -267,6 +267,12 @@ Transform.mk = function (o,scale,rotation) {
   return rs;
 }
 
+Transform.copyto = function (xf) {
+  this.scale = xf.scale;
+  this.rotation = xf.rotation;
+  this.translation.copyto(xf.translation);
+}
+
 Transform.hasNaN = function() {
   if (isNaN(this.scale)) {
     return true;

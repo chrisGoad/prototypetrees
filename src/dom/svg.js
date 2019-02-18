@@ -1034,12 +1034,13 @@ SvgRoot.fitContents = function (fitFactor,dontDraw,onlyIfNeeded) {
   }
   cxf = cn.transform;
   if (cxf) {
-    cn.__removeAttribute("transform");
+	cxf.copyto(newXf);
+  } else {
+	cn.set("transform",newXf);
   }
   if (fitAdjust) {
-    xf.set("translation",newXf.translation.plus(fitAdjust));
+    cn.transform.translation.copyto(newXf.translation.plus(fitAdjust));
   }
-  cn.set("transform",newXf);
   cn.draw();
 }
 
