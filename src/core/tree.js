@@ -1897,11 +1897,55 @@ ObjectNode.setActiveProperty = function (prop,value) {
 
 
 
+const externalToTree = function (node) {
+  return (node!==root) && ((!getval(node,'__parent')) || Boolean(ancestorWithProperty(node,'__builtIn')));
+}
+const crossLinks = function (node) {
+  let rs = [];
+  let props = Object.getOwnPropertyNames(node);
+  props.forEach((p) => {
+    if (p === '__parent') {
+      return;
+    }
+    let child = node[p];
+    if (child && (typeof child === 'object') && (!externalToTree(child))) {
+      if (child.__name !== p) {
+        rs.push(p);
+      }
+    }
+  });
+  return rs;
+}
+ 
+ const allCrossLinks = function (node) {
+   debugger;
+    
+  let rs = [];
+  const R = (nd) => {
+    if (externalToTree(nd)) {
+      return;
+    }
+    let links = crossLinks(nd);
+    if (links.length > 0) {
+      links.forEach((p) => rs.push([nd.__name,p]));
+    }
+    let proto = Object.getPrototypeOf(nd);
+    R(proto);
+    forEachTreeProperty(nd,R);
+  }
+  R(node);
+  return rs;
+}
+    
+    
+ 
+
+
 export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,crossTreeLinks,
         mapNonCoreLeaves,treeProperty,mapOwnProperties,lift,forEachTreeProperty,stripInitialSlash,descendantWithProperty,
         isNode,ancestorHasOwnProperty,isAtomic,treeProperties,autoname,removeChildren,beforeChar,afterChar,
         isDescendantOf,findAncestor,ancestorWithProperty,ancestorWithPropertyFalse,ancestorWithPropertyTrue,ancestorWithPropertyValue,
         nDigits,evalPath,inheritors,forInheritors,pathToString,climbCount,pOf,setPropertiesIfMissing,
         isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,
-        newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,deepCopy
+        newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,deepCopy,allCrossLinks
         };

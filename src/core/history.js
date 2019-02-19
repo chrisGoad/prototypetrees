@@ -1,5 +1,5 @@
 let history = [];
-let historyEnabled = true;
+let historyEnabled = false;
 // each element of history is either a complete state, or a diff
 // at any given moment (except when the mouse is moving), the last element of history represents the current state 
 // (perhaps via a diff)
@@ -9,16 +9,21 @@ let historyEnabled = true;
 
 let beforeSaveStateHooks = [];
 let lastState;
+let lastMap;
+
+const isDiff = (h) => Array.isArray(h);
+
 
 const addStateToHistory = function () { //complete state, that is
+  debugger;
   clearLabels(root);
   lastState = deserialize(serialize(root));
-  let check = collectNodes(lastState,root);// sets the global nodeMap
-  if (!check) {
-	 console.log('collectNodes failed');
-	debugger;// shouldn't happen
+  lastMap = collectNodes(lastState,root);// sets the global nodeMap
+  if (!lastMap) {
+	  console.log('CollectNodes failed');
+	  debugger;// shouldn't happen
   }
-  history.push({map:nodeMap,state:lastState});
+  history.push({map:lastMap,state:lastState});
 
 }
   
@@ -31,58 +36,76 @@ const saveState = function () {
   beforeSaveStateHooks.forEach((fn) => {fn();});
   let ln = history.length;
   if (ln === 0) {
-	addStateToHistory();
-	return;
+	  addStateToHistory();
+	  return;
   }
-  let diffs = findAllDiffs();
+  let diffs = findAllDiffs(lastMap);
   if (diffs) { 
-	 history.push(diffs);
+	  history.push(diffs);
   } else { // need a new complete state
-	addStateToHistory();
+	  addStateToHistory();
   }
 }
+
 
 let afterRestoreStateHooks = [];
 
-const installLastState = function () {
+
+const mostRecentState = function () {
   let ln = history.length;
-  for (i=ln-1;i>=0;i--) {
-	let h = history[i];
-	if (!Array.isArray(h)) {
-	  lastState = h.state;
-	  nodeMap = h.map;
-	  root = lastState;
-	  return;
-	}
+  for (let i=ln-1;i>=0;i--) {
+    let h = history[i];
+    if (!isDiff(h)) {
+      return i;
+    }
   }
 }
-
+/*
+const installMostRecentState = function () {
+  let ln = history.length;
+  for (i=ln-1;i>=0;i--) {
+    let h = history[i];
+    if (!isDiff(h)) {
+      lastState = h.state;
+      lastMap = h.map;
+      installMap(lastMap);
+      return i;
+    }
+  }
+}
+*/
 const undo = function () {
   debugger;
   if (!historyEnabled) {
-	return;
+    return;
   }
-  let needReinstall = false;
   let ln = history.length;
   if (ln <= 1) {
     return;
   }
   let current = history.pop();
-  if (!Array.isArray(current)) { //move to the last state
-    installLastState();
-	needReinstall = true;
-  }
-  let previous = history[ln-2];
-  if (previous) { //diff
-    installOriginalState();
-	if (Array.isArray(previous)) {
-      installDiffs(root,previous);
-	}
-  } 
-  if (needReinstall && vars.installRoot) {
-	vars.installRoot();
-  } else if (vars.refresh) {
-	vars.refresh();
+  let pidx = ln-2;
+  let previous = history[pidx];
+  let midx = mostRecentState();
+  let m = history[midx];
+  if (isDiff(current)) { 
+    if (pidx > midx) {
+      installMap(m.map);
+      installDiffs(m.map,previous);
+      if (vars.refresh) {
+	      vars.refresh();
+      }
+    }
+  } else { // we have moved back to an old state with a different structure
+    root = copyState(m.state);
+    m.map = remap(m.map);
+    
+    if (pidx > midx) {
+      installDiffs(m.map,previous);
+    }
+    if (vars.installRoot) {
+	    vars.installRoot();
+    }
   }
   //afterRestoreStateHooks.forEach((fn) => {fn();});
 }
