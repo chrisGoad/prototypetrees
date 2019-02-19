@@ -1917,9 +1917,7 @@ const crossLinks = function (node) {
   return rs;
 }
  
- const allCrossLinks = function (node) {
-   debugger;
-    
+ const allCrossLinks = function (node) {    
   let rs = [];
   const R = (nd) => {
     if (externalToTree(nd)) {
