@@ -1195,7 +1195,7 @@ svg.stdColorsForCategories = function (colors,categories) {
   });
 }
 
-core.defineSpread(tag.g.mk);
+//core.defineSpread(tag.g.mk);
 
 const isGeometric = function (nd) {
   return SvgElement.isPrototypeOf(nd);
@@ -1321,7 +1321,6 @@ const installRoot = function (itm) {
 core.vars.installRoot = installRoot;
 core.vars.refresh = svgDraw;
 
-core.afterRestoreStateHooks.push(installRoot);
 
 
 const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];

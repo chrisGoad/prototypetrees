@@ -109,4 +109,63 @@ const parseQuerystring = function() {
     return nvpair;
 }
 
+
+// in strict mode, the next 4 functions return undefined if c does not appear in s, ow the whole string
+const afterChar = function (string,chr,strict) {
+  let idx = string.indexOf(chr);
+  if (idx < 0) {
+    return strict?undefined:string;
+  }
+  return string.substr(idx+1);
+}
+
+
+
+
+const beforeChar = function (string,chr,strict) {
+  let idx = string.indexOf(chr);
+  if (idx < 0) {
+    return strict?undefined:string;
+  }
+  return string.substr(0,idx);
+}
+
+  
+const stripInitialSlash = function (string) {
+  if (string==='') {
+    return string;
+  }
+  if (string[0]==='/') {
+    return string.substr(1);
+  }
+  return string;
+}
+
+
+const addInitialSlash = function (string) {
+  if (string==='') {
+    return string;
+  }
+  if (string[0]==='/') {
+    return string;
+  }
+  return '/'+string;
+}
+
+const pathReplaceLast = function (string,rep,sep) {
+  let sp = sep?sep:'/';
+  let idx = string.lastIndexOf(sp);
+  let  dr = string.substring(0,idx+1);
+  return dr + rep;
+}
+  
+ 
+const setIfNumeric = function (node,prp,v) {
+  let n = parseFloat(v);
+  if (!isNaN(n)) {
+    this[prp] = v;
+  }
+}
+
+
 export {httpGet,beginsWith,endsIn,afterLastChar,beforeLastChar,parseQuerystring,pathExceptLast,pathLast};

@@ -1,7 +1,7 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
-import * as core from "/js/core-1.1.0.min.js";
+import * as core from "/js/core-1.1.1.min.js";
 
 let codeRoot = core.codeRoot;
 let geomr = codeRoot.set("geom",core.ObjectNode.mk());

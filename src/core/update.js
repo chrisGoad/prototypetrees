@@ -13,7 +13,7 @@ const declareComputed = function (node) {
   return node;
 }
 
-defineFieldAnnotation("computed");  // defines __setComputed and __getComputed
+//defineFieldAnnotation("computed");  // defines __setComputed and __getComputed
 
 const isComputed = function (node,k,id) {
   let d = id?id:0;
@@ -88,7 +88,6 @@ ObjectNode.__update = function () {
   } else {
     this.update.apply(this,arguments);
   }
-  this.__newData = 0;
   if (this.__updateCount) {
     this.__updateCount++;
   } else {
@@ -121,21 +120,7 @@ const partsFromSource = function (src) {
   })
   return rs;
 }
-const partAncestor = function (node) {
-  let rs = node;
-  while (1) {
-    if (rs.update) {
-      return rs;
-    }
-    let pr = rs.__get('__parent');
-    if (pr) {
-      rs = pr;
-    } else {
-      return rs;
-    }
-  }
-}
-  
+
   
 
 
@@ -157,21 +142,6 @@ const updateInheritors = function (node,filter) {
   forInheritors(node,function (x) {x.__update()},filter);
 }
 
-const updateRoot = function (filter) {
-  if (root && root.update && (!filter || filter(root)))  {
-    root.__update();
-  } else if (root) {
-      updateParts(root,filter);
-  }
-}
-
-const updateAncestors = function (node) {
-  if (node) {
-    node.__update();
-    updateAncestors(node.__parent);
-  }
-}
-
 
 const resetArray = function (node,prop) {
   let child = node.__get(prop); 
@@ -183,133 +153,8 @@ const resetArray = function (node,prop) {
   return child;
 }
 
-const resetComputedArray = function (node,prop) {
-  let child = resetArray(node,prop);
-  declareComputed(child);
-  return child;
-}
-
-
-// data might be internal, in which case the __internalData and __internalDataString are set, or external, in which case .data is a value with a __sourceUrl
-
-const getData = function (node) {
-  if (node.__internalData) {
-    return node.__internalData;
-  }
-  let idata = node.__internalDataString;
-  if (idata) {
-    let data = lift(JSON.parse(idata));
-    data.__computed = true;
-    node.set("__internalData",data);
-    return data;
-  }
-  return node.data;
-}
-
-const setDataString = function (node,str) {
-  node.__internalDataString = str;
-  node.__internalData = undefined; // getData will now update __internalData from __internalDataString
-}
-
-ObjectNode.initializeData = function (dataString) {
-   this.__internalDataString = dataString;
-   this.__internalData = undefined;
-   return getData(this);
-}
 
 
 
-// create a new fresh value for node[prop], all set for computing a new state
-
-const resetComputedObject = function (node,prop,factory) {
-  let value = node.__get(prop),
-    newValue;
-  if (value) {
-    removeChildren(value);
-  } else {
-    if (factory) {
-      newValue = factory();
-    } else {
-      newValue = ObjectNode.mk();
-    }
-    value = node.set(prop,newValue);
-  }
-  declareComputed(value);
-  return value;
-}
- 
- //resetComputedDNode = pj.resetComputedObject; // old name
- 
-/* if stash is nonnull, save the computed nodes to stash
- * the stash option is used when saving an item, but wanting its state to persist after the save
- */
-
-const removeComputed = function (node,stash) {
-  let  found = 0;
-  let computedProperties = node.__computedProperties;
-  forEachTreeProperty(node,function (child,prop) {
-    if (prop === "__required") {
-      return;
-    }
-    let tp = typeof child;
-    if (!child || (tp !== 'object')) {
-      if (computedProperties && (tp === 'string') && computedProperties[prop]) {
-        stash[prop] = child;
-        node[prop] = '';
-        return 1;
-      }
-      return 0;
-    }
-    if (child.__computed) {
-      found = 1;
-      if (stash) {
-        stash[prop] = child;
-      }
-      if (ArrayNode.isPrototypeOf(child)) {
-        node.set(prop,ArrayNode.mk());
-      } else {
-        child.remove();
-      }
-    } else {
-      let stashChild;
-      if (stash) {
-        stashChild = stash[prop] = {__internalNode:1};
-      } else {
-        stashChild = undefined;
-      }
-      if (removeComputed(child,stashChild)) {
-        found = 1;
-      } else {
-        if (stash) {
-          delete stash[prop];
-        }
-      }
-    }
-  },true);
-  return found;
-}
-
-
-const restoreComputed = function (node,stash) {
-  for (let prop in stash) {
-    if (prop === '__internalNode') {
-      continue;
-    }
-    let stashChild = stash[prop];
-    if (!stashChild) {
-      return;
-    }
-    if (typeof stashChild === 'string') {
-      node[prop] = stashChild;
-      return;
-    }
-    if (stashChild.__internalNode) {
-      restoreComputed(node[prop],stashChild);
-    } else {
-      node[prop] = stashChild;
-    }
-  }
-}
-
-export {updateRoot,updateParts,isComputed,setUpdateFilter,setDisplayError,displayError,getData,setDataString,
-removeComputed,restoreComputed,resetComputedArray,resetComputedObject,declareComputed};
+export {updateParts,isComputed,setUpdateFilter,setDisplayError,displayError};
+//getData,setDataString,removeComputed,restoreComputed,resetComputedArray,resetComputedObject,declareComputed

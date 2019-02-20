@@ -1,9 +1,9 @@
 
 
-exports.core = "1.1.0";
-exports.geom = "1.1.0";
-exports.dom = "1.1.0";
-exports.harness = "1.1.0";
+exports.core = "1.1.1";
+exports.geom = "1.1.1";
+exports.dom = "1.1.1";
+exports.harness = "1.1.1";
 exports.ui = "1.1.0";
 exports.graph = "1.1.0";
 exports.lightbox = "1.1.0";
