@@ -96,10 +96,10 @@ const referencePath = function (x,root) {
   }
   relPath = (x === extAncestor)?'':x.__pathOf(extAncestor).join('/');                                  
   if (builtIn) {
-    if (extAncestor === codeRoot) {
+    if (extAncestor === externals) {
       return relPath;
     } else {
-      builtInPath = extAncestor.__pathOf(codeRoot);
+      builtInPath = extAncestor.__pathOf(externals);
       return builtInPath.join('/') + '/' + relPath;
     }
   }
@@ -110,7 +110,7 @@ const encode = function (root) {
   dependencies = {};
   externalReferences = [];
   let nodes = [];
-  let externals = [];
+  let xternals = []; // missing e to avoid conflict with the global
   let theObjects  = [];
   let chains = [];
   let theArrays = {};
@@ -145,8 +145,8 @@ const encode = function (root) {
     } else {
       let reference = referencePath(x,root);
       if (reference) {
-        rs = 'x'+externals.length;
-        externals.push(reference);
+        rs = 'x'+xternals.length;
+        xternals.push(reference);
         x.__code = rs;
         externalItems.push(x);
         return rs;
@@ -294,7 +294,7 @@ const encode = function (root) {
   rs.arrays = theArrays;
   rs.atomicProperties = atomicProperties;
   rs.children = theChildren;
-  rs.externals = externals;
+  rs.externals = xternals;
   rs.__requires = Object.getOwnPropertyNames(dependencies);
   externalizeCleanup();
   return rs;

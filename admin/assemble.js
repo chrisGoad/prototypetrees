@@ -30,7 +30,7 @@ const prepend = function (what,arr) {
 fileLists.core = prepend('core',["root","basic_ops","string_utils","tree","exception","update","instantiate","serialize","deserialize",
                   "install","log"]);
 fileLists.geom = prepend("geom",["geom","geometric_object"]); 
-fileLists.dom = prepend('dom',["environment","data","dom1","jxon","svg","html","domstringify","svg_serialize"]);
+fileLists.dom = prepend('dom',["environment","dom1","jxon","svg","html","domstringify","svg_serialize"]);
 fileLists.harness  = prepend('harness',['environment','install','page','init_page']);                         
 
 function doGzip(file,cb) {

@@ -11,30 +11,31 @@ const ObjectNode = {};
 // Sequential, zero-based array
 const ArrayNode = [];
 
-//export {ObjectNode,ArrayNode};
-// codeRoot is the root of the ProtoPedia realm, relative to which paths are computed
-// root is the root of the current item (the item that becomes visible in the UI)
 
-
-const codeRoot = Object.create(ObjectNode);
+// Later modules install hooks under vars
 const vars = Object.create(ObjectNode);
+
+// root is the root of the current item (the item that becomes visible in the UI)
 
 let root;
 const setRoot = function (rt) {
   root = rt;
 }
 
+// externals are explained here: https://protopedia.org/doc/tech.html#externals
 
-codeRoot.Object = ObjectNode;
-codeRoot.Array = ArrayNode;
+const externals = Object.create(ObjectNode);
+
+externals.Object = ObjectNode;
+externals.Array = ArrayNode;
 
 
 // do the work normally performed by 'set'  by hand for these initial objects
 
 
-ObjectNode.__parent = codeRoot;
+ObjectNode.__parent = externals;
 ObjectNode.__name = 'Object';
-ArrayNode.__parent = codeRoot;
+ArrayNode.__parent = externals;
 ArrayNode.__name = 'Array';
 
 
@@ -45,4 +46,4 @@ const defineArrayNodeMethod = function (name,method) {
 }
   
 
-export {setRoot,root,ObjectNode,ArrayNode,codeRoot,vars,defineArrayNodeMethod};
+export {setRoot,root,ObjectNode,ArrayNode,externals,vars,defineArrayNodeMethod};

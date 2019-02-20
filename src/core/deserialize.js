@@ -40,7 +40,7 @@ const resolveExternalReference = function (ref) {
     }
     rs = urlAndPath.path?evalPath(urlAndPath.path,item):item;
   } else if (firstChar === '/') {
-    rs = evalPath(ref.substr(1),codeRoot);
+    rs = evalPath(ref.substr(1),externals);
   } else {
     error('deserialize','unexpected condition'); 
   }

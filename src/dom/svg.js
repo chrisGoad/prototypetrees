@@ -1,7 +1,7 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
-const  svg = codeRoot.set('svg',core.ObjectNode.mk());//just for supporting an old naming scheme svg.Element, as a synonym for dom.SvgElement
+const  svg = externals.set('svg',core.ObjectNode.mk());//just for supporting an old naming scheme svg.Element, as a synonym for dom.SvgElement
 const mkWithVis = function (pr) {
   let rs = Object.create(pr);
   rs.visibility = "inherit";

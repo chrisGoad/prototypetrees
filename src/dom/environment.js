@@ -6,7 +6,7 @@
 import * as core from "/js/core-1.1.1.min.js";
 import * as geom from "/js/geom-1.1.1.min.js";
 
-const codeRoot = core.codeRoot;
+const externals = core.externals;
 //const geomr = pjr.geom;
 const Point = geom.Point;
 const Rectangle = geom.Rectangle;

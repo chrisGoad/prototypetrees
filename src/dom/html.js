@@ -1,7 +1,7 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
-let html =  codeRoot.set("html",core.ObjectNode.mk());
+let html =  externals.set("html",core.ObjectNode.mk());
 
 html.set("Element",Object.create(Element)).__namedType(); // dom elements other than svg
 

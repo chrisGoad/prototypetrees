@@ -3,8 +3,8 @@
 
 import * as core from "/js/core-1.1.1.min.js";
 
-let codeRoot = core.codeRoot;
-let geomr = codeRoot.set("geom",core.ObjectNode.mk());
+let externals = core.externals;
+let geomr = externals.set("geom",core.ObjectNode.mk());
 geomr.__builtIn = true;
 geomr.set("Point",core.ObjectNode.mk()).__namedType();
 let Point = geomr.Point;

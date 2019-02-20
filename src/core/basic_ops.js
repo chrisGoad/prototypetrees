@@ -4,11 +4,11 @@
 // basic operations on ObjectNodes, and ArrayNodes; set for example
 //Starting the cleanup; testing git
 
-codeRoot.__builtIn = 1;
+externals.__builtIn = 1;
 
 // constructors for nodes 
 
-codeRoot.Object.mk = function (src) {
+ObjectNode.mk = function (src) {
   let rs = Object.create(ObjectNode);
   if (src) {
     extend(rs,src);
@@ -16,8 +16,8 @@ codeRoot.Object.mk = function (src) {
   return rs;
 }
 
-codeRoot.Array.mk = function (array) {
-  let rs = Object.create(codeRoot.Array);
+ArrayNode.mk = function (array) {
+  let rs = Object.create(externals.Array);
   if (array===undefined) {
     return rs;
   }
@@ -46,7 +46,7 @@ codeRoot.Array.mk = function (array) {
 
 //  make the same method fn work for Objects, Arrays
 const nodeMethod = function (name,func) {
-  codeRoot.Array[name] = codeRoot.Object[name] = func;
+  ArrayNode[name] = ObjectNode[name] = func;
 }
 
 
@@ -108,7 +108,7 @@ const evalPath = function (ipth,iorigin) {
     return origin;
   }
   if (pth[0]==='') {
-    current = codeRoot;
+    current = externals;
     startIdx = 1;
   } else {
     current = origin;
@@ -153,7 +153,7 @@ const pathToString = function (p,isep) {
 
 /*
  * Return the path from root, or if root is undefined the path up to where parent is undefined. In the special case where
- * root === codeRoot, the path begins with '' (so that its string form will start with '/')
+ * root === externals, the path begins with '' (so that its string form will start with '/')
  */
 
 const pathOf = function (node,root) {
@@ -165,7 +165,7 @@ const pathOf = function (node,root) {
       return root?undefined:rs;
     }
     if (current=== root)  {
-      if (root === codeRoot) {
+      if (root === externals) {
         rs.unshift('');
       }
       return rs;

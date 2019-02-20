@@ -1,7 +1,7 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
-const domr = codeRoot.set("dom",core.ObjectNode.mk());
+const domr = externals.set("dom",core.ObjectNode.mk());
 
 /* the two varieties of dom elements are svg.shape and html.Element
  * each particular element, such as an svg rect or an html div, is represented by its own prototype.
@@ -52,7 +52,7 @@ core.ObjectNode.__tag = function () {
   let p0 = this;
   let p1 = Object.getPrototypeOf(p0);
   while (true) {
-    if ((p1 === SvgElement) || (codeRoot.html && (p1 === codeRoot.html.Element))) {
+    if ((p1 === SvgElement) || (externals.html && (p1 === externals.html.Element))) {
       return p0.__name;
     }
     if (p1 === core.ObjectNode) {
@@ -119,7 +119,7 @@ Element.__applyDomMap = function () {
 
 Element.__setAttributes = function (tag) {
   let forSvg = isSvgTag(tag);
-  let tagv = forSvg?svg.tag[tag]:codeRoot.html.tag[tag];
+  let tagv = forSvg?svg.tag[tag]:externals.html.tag[tag];
   if (!tagv) {
      core.error('dom','uknown tag '+tag);
   }
@@ -371,7 +371,7 @@ Element.__mkFromTag = function (itag) {
   if (tv) {
     rs  = Object.create(tv);
   } else {
-    html = codeRoot.html;
+    html = externals.html;
     if (!html) {
       core.error("No definition for tag",tag);
     }
