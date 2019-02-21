@@ -18,25 +18,35 @@ const copyState = function (state) {
 
 
 
-const buildLabelMap = function (state) {
+const buildLabelMap = function (stateTop) {
   let map = {};
   const R = function (state) {
+    if (map[state.__label]) {
+      return;
+    }
+    if (state.__label === undefined) {
+      debugger;
+    }
     map[state.__label] = state;
     let ownprops = Object.getOwnPropertyNames(state);
     ownprops.forEach((p) => {
       let child = state[p];
-      if (child && (typeof child === 'object') &&  (child.__parent === node)) {
-        buildLabelMap(child);
+      if (child && (typeof child === 'object') &&  (child.__parent === state)) {
+        let proto = Object.getPrototypeOf(child);
+        if (!externalToTree(proto)) {
+          R(proto);
+        }
+        R(child);
       };
     });
     return map;
   }
-  R(state);
+  R(stateTop);
   return map;
 }
 
 const remap = function (state,map) {
-  labelMap = buildLabelMap(state);
+  let labelMap = buildLabelMap(state);
   map.forEach(function (mapEl) {
     let label = mapEl.node1.__label;
     mapEl.node2 = labelMap[label];
@@ -97,7 +107,7 @@ let nodeMap; // this maps nodes1 to nodes2; each member has the form {node1:node
 
 const collectNodes = function (n1,n2) { // traverse the trees in order given by the ownprops of n1
   let nodeMap = [];
-  let labelCount = 1;
+  let labelCount = 0;
 
 	  
 	const collectNodesR = function (n1,n2,callDepth=0) { // traverse the trees in order given by the ownprops of n1

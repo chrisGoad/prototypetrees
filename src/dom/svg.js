@@ -1321,7 +1321,7 @@ const installRoot = function (itm) {
 core.vars.installRoot = installRoot;
 core.vars.refresh = svgDraw;
 
-core.afterRestoreStateHooks.push(installRoot);
+core.afterRestoreStateHooks.push(fullUpdate);
 
 
 const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];

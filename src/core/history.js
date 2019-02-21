@@ -1,5 +1,4 @@
 let history = [];
-let historyEnabled = false;
 // each element of history is either a complete state, or a diff
 // at any given moment (except when the mouse is moving), the last element of history represents the current state 
 // (perhaps via a diff)
@@ -8,8 +7,6 @@ let historyEnabled = false;
 
 
 let beforeSaveStateHooks = [];
-let lastState;
-let lastMap;
 
 const isDiff = (h) => Array.isArray(h);
 
@@ -17,38 +14,23 @@ const isDiff = (h) => Array.isArray(h);
 const addStateToHistory = function () { //complete state, that is
   debugger;
   clearLabels(root);
-  lastState = deserialize(serialize(root));
-  lastMap = collectNodes(lastState,root);// sets the global nodeMap
-  if (!lastMap) {
+  let srcp = root.__sourceUrl;
+  root.__sourceUrl = undefined;// for reference generaation in externalize
+  beforeSerialize.forEach(function (fn) {fn(root);});
+  let s = encode(root);
+  let state = deserialize(s);
+  let map = collectNodes(state,root);// sets the global nodeMap
+  root.__sourceUrl = srcp;
+  afterSerialize.forEach(function (fn) {fn(root);});
+  debugger;
+  //let labelMap = buildLabelMap(state); // just for testing
+  if (!map) {
 	  console.log('CollectNodes failed');
 	  debugger;// shouldn't happen
   }
-  history.push({map:lastMap,state:lastState});
+  history.push({map,state});
 
 }
-  
-const saveState = function () {
-  debugger;
-  console.log('saveState');
-  if (!historyEnabled) {
-	return;
-  }
-  beforeSaveStateHooks.forEach((fn) => {fn();});
-  let ln = history.length;
-  if (ln === 0) {
-	  addStateToHistory();
-	  return;
-  }
-  let diffs = findAllDiffs(lastMap);
-  if (diffs) { 
-	  history.push(diffs);
-  } else { // need a new complete state
-	  addStateToHistory();
-  }
-}
-
-
-let afterRestoreStateHooks = [];
 
 
 const mostRecentState = function () {
@@ -60,6 +42,31 @@ const mostRecentState = function () {
     }
   }
 }
+  
+const saveState = function () {
+  debugger;
+  console.log('saveState');
+  if (!vars.historyEnabled) {
+	return;
+  }
+  beforeSaveStateHooks.forEach((fn) => {fn();});
+  let ln = history.length;
+  if (ln === 0) {
+	  addStateToHistory();
+	  return;
+  }
+  let lastState = history[mostRecentState()];
+  let diffs = findAllDiffs(lastState.map);
+  if (diffs) { 
+	  history.push(diffs);
+  } else { // need a new complete state
+	  addStateToHistory();
+  }
+}
+
+
+let afterRestoreStateHooks = [];
+
 /*
 const installMostRecentState = function () {
   let ln = history.length;
@@ -76,7 +83,7 @@ const installMostRecentState = function () {
 */
 const undo = function () {
   debugger;
-  if (!historyEnabled) {
+  if (!vars.historyEnabled) {
     return;
   }
   let ln = history.length;
@@ -89,17 +96,18 @@ const undo = function () {
   let midx = mostRecentState();
   let m = history[midx];
   if (isDiff(current)) { 
-    if (pidx > midx) {
+    if (pidx >= midx) {
       installMap(m.map);
-      installDiffs(m.map,previous);
+      if (pidx > midx) {
+        installDiffs(m.map,previous);
+      }
       if (vars.refresh) {
 	      vars.refresh();
       }
     }
   } else { // we have moved back to an old state with a different structure
     root = copyState(m.state);
-    m.map = remap(m.map);
-    
+    remap(root,m.map); 
     if (pidx > midx) {
       installDiffs(m.map,previous);
     }
@@ -107,8 +115,8 @@ const undo = function () {
 	    vars.installRoot();
     }
   }
-  //afterRestoreStateHooks.forEach((fn) => {fn();});
+  afterRestoreStateHooks.forEach((fn) => {fn();});
 }
 
 
-export {history,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo,lastState};
+export {history,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo};
