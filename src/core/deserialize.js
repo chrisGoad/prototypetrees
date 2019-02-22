@@ -93,6 +93,10 @@ const deserialize = function (x) {
       if (typeof childCode === 'number') {
         child = inodes[childCode];
       } else {
+        if (childCode === undefined) {
+          debugger;
+          continue;
+        }
         if (childCode.indexOf(' child')>=0) {
           child = externalItems[beforeChar(childCode,' ')];
           child.__parent = parent;                               

@@ -93,7 +93,9 @@ const objectProperties = (node) => {
   ownprops.forEach((p) => {
     let child = node[p];
     if (child && (typeof child === 'object')) {
-      rs.push(p);
+      if (!child.__computed) {
+        rs.push(p);
+      }
     }
   });
   return rs;
@@ -127,12 +129,12 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	  let ext1 = callDepth && externalToTree(n1);
 	  let ext2 = callDepth && externalToTree(n2);
 	  if (ext1 || ext2) {
-		let rs = ext1 === ext2;
-		if (!rs) {
-		  console.log('Ext match false');
-		  debugger;
-		}
-		return rs;
+		  let rs = ext1 === ext2;
+		  if (!rs) {
+		    console.log('Ext match false');
+		    debugger;
+		  }
+		  return rs;
 	  }
 	  n1.__label = n2.__label = labelCount++;
 	  nodeMap.push({node1:n1,node2:n2});
@@ -150,8 +152,22 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
         continue;
       }
       console.log(callDepth,n1.__name,'/',p);
+      if (p === 'data') {
+        debugger;
+      }
       let child1 = n1[p];
       let child2 = n2[p];
+      let extRef1 = child1.__get('__sourceUrl');
+	    let extRef2 = child2.__get('__sourceUrl');
+      if (extRef1 || extRef2) {
+   	    let rs = extRef1 === extRef2;
+		    if (!rs) {
+		      console.log('Ext match false');
+		      debugger;
+          return false;
+		    }
+        continue;
+      }
       let treeChild1 = child1.__parent === n1;
       let treeChild2= child2.__parent === n2;
       if (treeChild1 !== treeChild2) {
