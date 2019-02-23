@@ -153,7 +153,7 @@ const encode = function (root) {
       }
       nodes.push(x);
       rs = x.__code = nodeCount++;
-      forEachTreeProperty(x,function (child) {
+      forEachTreeOrExternalProperty(x,function (child) {
         assignCode(child,depth+1);
       });
     }

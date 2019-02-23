@@ -736,6 +736,11 @@ const treeProperty = function (node,prop,includeLeaves,knownOwn) {
 }
 
 
+const externalProperty = function (node,prop) {
+  let child = node[prop];
+  return isObject(child) && getval(child,'__sourceUrl');
+}
+
 const treeProperties = function (node,includeLeaves) {
   let rs = [];
   let child,names,ln,i;
@@ -780,9 +785,9 @@ const ownProperties = function (node) {
 }
 
 // apply fn(node[p],p,node) to each treeProperty p  of node. Used extensively for applying functions through a tree
-const forEachTreeProperty = function (node,fn,includeLeaves) {
+const forEachTreeProperty = function (node,fn,includeLeaves,includeExternals) {
   let perChild = function (value,prop) {
-     if (treeProperty(node,prop,includeLeaves,true))  { //true: already known to be an owned property
+    if ((includeExternals && externalProperty(node,prop)) || treeProperty(node,prop,includeLeaves,true))  { //true: already known to be an owned property
        fn(node[prop],prop,node);
     }
   }
@@ -792,6 +797,11 @@ const forEachTreeProperty = function (node,fn,includeLeaves) {
     let ownprops = Object.getOwnPropertyNames(node);
     ownprops.forEach(perChild.bind(undefined,undefined));
   }
+  return this;
+}
+
+const forEachTreeOrExternalProperty = function (node,fn,includeLeaves) {
+  forEachTreeProperty(node,fn,includeLeaves,true);
   return this;
 }
 

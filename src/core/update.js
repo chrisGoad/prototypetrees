@@ -192,18 +192,36 @@ const resetComputedArray = function (node,prop) {
 
 // data might be internal, in which case the __internalData and __internalDataString are set, or external, in which case .data is a value with a __sourceUrl
 
-const getData = function (node) {
+const getData = function (node,idata) {
+ 
   if (node.__internalData) {
     return node.__internalData;
   }
-  let idata = node.__internalDataString;
-  if (idata) {
-    let data = lift(JSON.parse(idata));
-    data.__computed = true;
+  if (node.data) {
+    return node.data;
+  }
+  
+  let indata = node.__internalDataString;
+  if (indata) {
+    let data = lift(JSON.parse(indata));
+   // data.__computed = true;
     node.set("__internalData",data);
     return data;
   }
-  return node.data;
+  if (idata) {
+    if (idata.__get('__sourceUrl')) {
+      node.data = idata;
+    } else {
+      let data = core.lift(idata);
+      if (data.__parent) {
+        node.data = data;
+      } else {
+        node.set('data',data);
+      }
+    }
+    return node.data;
+  }
+  
 }
 
 const setDataString = function (node,str) {

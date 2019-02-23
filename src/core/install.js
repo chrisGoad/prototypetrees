@@ -256,8 +256,12 @@ const require1 = function (requester,sources) {
          loadedScripts[src] = rs;        
          let parsedRs = lift(parseJSONwithCatch(src,rs));
          if (parsedRs !== 'parseError') {
-           parsedRs.__sourceUrl = src;
-           installedItems[src] = parsedRs;
+           // always lift
+           let lifted = core.lift(parsedRs);
+           lifted.__sourceUrl = src;
+           installedItems[src] = lifted;
+           //parsedRs.__sourceUrl = src;
+           //installedItems[src] = parsedRs;
          }
          installRequiresIfPossible();
        });
