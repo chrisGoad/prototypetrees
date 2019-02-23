@@ -107,6 +107,7 @@ const referencePath = function (x,root) {
 }
 
 const encode = function (root) {
+  debugger;
   dependencies = {};
   externalReferences = [];
   let nodes = [];
@@ -249,7 +250,8 @@ const encode = function (root) {
         }
       }
     }
-    if (ArrayNode.isPrototypeOf(x)) {
+    if (0 && ArrayNode.isPrototypeOf(x)) {
+      debugger;
       let ln = x.length;
       for (let i=0;i<ln;i++) {
         addToResult(i,atomic);

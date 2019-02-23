@@ -8,11 +8,12 @@ let history = [];
 
 let beforeSaveStateHooks = [];
 
+let historyFailed = false;
 const isDiff = (h) => Array.isArray(h);
 
 
 const addStateToHistory = function () { //complete state, that is
-  debugger;
+  //debugger;
   clearLabels(root);
   let srcp = root.__sourceUrl;
   root.__sourceUrl = undefined;// for reference generaation in externalize
@@ -22,10 +23,11 @@ const addStateToHistory = function () { //complete state, that is
   let map = collectNodes(state,root);// sets the global nodeMap
   root.__sourceUrl = srcp;
   afterSerialize.forEach(function (fn) {fn(root);});
-  debugger;
+  //debugger;
   //let labelMap = buildLabelMap(state); // just for testing
   if (!map) {
 	  console.log('CollectNodes failed');
+    historyFailed = true;
 	  debugger;// shouldn't happen
   }
   history.push({map,state});
@@ -44,7 +46,7 @@ const mostRecentState = function () {
 }
   
 const saveState = function () {
-  debugger;
+  //debugger;
   console.log('saveState');
   if (!vars.historyEnabled) {
 	return;
@@ -82,7 +84,7 @@ const installMostRecentState = function () {
 }
 */
 const undo = function () {
-  debugger;
+  //debugger;
   if (!vars.historyEnabled) {
     return;
   }
@@ -106,6 +108,7 @@ const undo = function () {
       }
     }
   } else { // we have moved back to an old state with a different structure
+    debugger;
     root = copyState(m.state);
     remap(root,m.map); 
     if (pidx > midx) {
@@ -119,4 +122,4 @@ const undo = function () {
 }
 
 
-export {history,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo};
+export {history,historyFailed,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo};

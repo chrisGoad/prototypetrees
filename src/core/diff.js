@@ -16,6 +16,14 @@ const copyState = function (state) {
   return deserialize(serialize(state));
 }
 
+let debugDiff = false;
+
+const diffDebug = (msg) => {
+  if (debugDiff) {
+    console.log('DEBUG DIFF ',msg);
+    debugger;
+  }
+}
 
 
 const buildLabelMap = function (stateTop) {
@@ -70,7 +78,7 @@ const propsEquivalent = function (props1,props2,oneWay=false) {
   for (let i=0;i<ln1;i++) {
     let p=props1[i];
     if ((propsToIgnore.indexOf(p) === -1) && (props2.indexOf(p) === -1)) {
-        debugger;
+        diffDebug('props1 not equivalent');
         return false;
     }
   }
@@ -80,7 +88,7 @@ const propsEquivalent = function (props1,props2,oneWay=false) {
   for (let i=0;i<ln2;i++) {
     let p=props2[i];
     if ((propsToIgnore.indexOf(p) === -1) && (props1.indexOf(p) === -1)) {
-        debugger;
+        diffDebug('props2 not equivalent');
         return false;
     }
   }
@@ -118,8 +126,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	  let  label2 = getval(n2,'__label');
 	 
 	  if (label1 !== label2) {
-		  console.log('label mismatch false');
-		  debugger;
+		  diffDebug('label mismatch false');
 		  return false;
 	  }
 	  if (label1) {
@@ -131,8 +138,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	  if (ext1 || ext2) {
 		  let rs = ext1 === ext2;
 		  if (!rs) {
-		    console.log('Ext match false');
-		    debugger;
+		    diffDebug('Ext match false');
 		  }
 		  return rs;
 	  }
@@ -142,7 +148,6 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	  let obprops2 = objectProperties(n2);
 	  if (!propsEquivalent(obprops1,obprops2)) {
 		  console.log('false 0');
-		  debugger;
 		  return false
 	  }
 	  let ln = obprops1.length;
@@ -151,10 +156,10 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
       if (propsToIgnore.indexOf(p) > -1) {
         continue;
       }
-      console.log(callDepth,n1.__name,'/',p);
-      if (p === 'data') {
-        debugger;
-      }
+     // console.log(callDepth,n1.__name,'/',p);
+     // if (p === 'data') {
+     //   debugger;
+     // }
       let child1 = n1[p];
       let child2 = n2[p];
       let extRef1 = child1.__get('__sourceUrl');
@@ -162,8 +167,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
       if (extRef1 || extRef2) {
    	    let rs = extRef1 === extRef2;
 		    if (!rs) {
-		      console.log('Ext match false');
-		      debugger;
+		      diffDebug('Ext match false');
           return false;
 		    }
         continue;
@@ -171,14 +175,13 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
       let treeChild1 = child1.__parent === n1;
       let treeChild2= child2.__parent === n2;
       if (treeChild1 !== treeChild2) {
-        console.log('false 2');
-        debugger;
+        diffDebug('false 2');
         return false;
       }
       if (treeChild1) { //both tree children
         let proto1 = Object.getPrototypeOf(child1);
         let proto2 = Object.getPrototypeOf(child2);
-        console.log('to proto');
+        //console.log('to proto');
         let rs = collectNodesR(proto1,proto2,callDepth+1);
         if (!rs) {
           return false;
@@ -190,7 +193,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
         
 		  }
 	  }
-	  console.log(callDepth,' true');
+	  //console.log(callDepth,' true');
 	  return true;
 	}
 	  
@@ -205,11 +208,10 @@ const findDiff = function (n1,n2) {
   let obprops1 = objectProperties(n1);
   let obprops2 = objectProperties(n2);
   if (!propsEquivalent(obprops1,obprops2)) {
-     debugger;
      return false;
   }
   let primProps = [];
-  let filter = (p) => (primProps.indexOf(p)===-1)&&(obprops1.indexOf(p)===-1);
+  let filter = (p) => (propsToIgnore.indexOf(p) === -1) && (primProps.indexOf(p)===-1)&&(obprops1.indexOf(p)===-1);
   ownprops1.forEach((p) => {
     if (filter(p)) {
       primProps.push(p);
@@ -228,8 +230,7 @@ const findDiff = function (n1,n2) {
     let child1 = n1[p];
     let child2 = n2[p];
     if (getval(child1,'__label') !== getval(child2,'__label')) {
-      console.log('label mismatch false');
-      debugger;
+      diffDebug('label mismatch false');
       return false;
     };    
   }
@@ -245,8 +246,7 @@ const findDiff = function (n1,n2) {
     let typ2 = typeof child2;
     if ((child1 !== undefined) && (typ1 !== typ2)) {
       if (p !== '__sourceUrl') { // special case
-        console.log('type mismatch false');
-        debugger;
+        diffDebug('type mismatch false');
         return false;
       }
     }
@@ -274,17 +274,22 @@ const findAllDiffs = function (map) {
 // installs the state represented by the map, without diffs
 const installMap = function (map) {
   root = map[0].node2;
+  let cnt = 0; // only for debugging
   map.forEach(function ({node1,node2}) {
 	  let ownprops1 = Object.getOwnPropertyNames(node1);
     ownprops1.forEach(function (p) {
       let child1 = node1[p];
       let child2 = node2[p]
+      if (child2 === 'undefined') {
+         debugger;
+      }
       let obChild1 = Boolean(child1 && (typeof child1 === 'object'));
       if (!obChild1) {
         if (child1!== child2) {
           node2[p] = child1;
         }
       }
+      cnt++;
 	  });
     // we might have to remove some added properties
     let ownprops2 = Object.getOwnPropertyNames(node2);
@@ -298,7 +303,6 @@ const installMap = function (map) {
 }
   
   const  clearLabels = function (nd) {
-	  debugger;
 	forEachDescendant((node) => {node.__label = undefined;})
   }
 	  
