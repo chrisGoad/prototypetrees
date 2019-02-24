@@ -7,6 +7,7 @@ let history = [];
 
 
 let beforeSaveStateHooks = [];
+let afterSaveStateHooks = [];
 
 let historyFailed = false;
 const isDiff = (h) => Array.isArray(h);
@@ -46,7 +47,7 @@ const mostRecentState = function () {
 }
   
 const saveState = function () {
-  //debugger;
+  debugger;
   console.log('saveState');
   if (!vars.historyEnabled) {
 	return;
@@ -55,15 +56,17 @@ const saveState = function () {
   let ln = history.length;
   if (ln === 0) {
 	  addStateToHistory();
-	  return;
+  } else {
+    let lastState = history[mostRecentState()];
+    let diffs = findAllDiffs(lastState.map);
+    if (diffs) { 
+      history.push(diffs);
+    } else { // need a new complete state
+      addStateToHistory();
+    }
   }
-  let lastState = history[mostRecentState()];
-  let diffs = findAllDiffs(lastState.map);
-  if (diffs) { 
-	  history.push(diffs);
-  } else { // need a new complete state
-	  addStateToHistory();
-  }
+  afterSaveStateHooks.forEach((fn) => {fn();});
+
 }
 
 
@@ -122,4 +125,4 @@ const undo = function () {
 }
 
 
-export {history,historyFailed,beforeSaveStateHooks,saveState,afterRestoreStateHooks,undo};
+export {history,historyFailed,beforeSaveStateHooks,afterSaveStateHooks,saveState,afterRestoreStateHooks,undo};
