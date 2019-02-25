@@ -883,7 +883,7 @@ const crossTreeLinks = function (onode=root) {
           let triple = [nodePath,prop,childPath];
           accum.push(triple);
         } else {
-          debugger;// keep; child is not in the tree
+        //  debugger;//  child is not in the tree
         }
       }
     };

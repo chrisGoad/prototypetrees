@@ -33,7 +33,7 @@ const buildLabelMap = function (stateTop) {
       return;
     }
     if (state.__label === undefined) {
-      debugger;
+      error('missing label'); 
     }
     map[state.__label] = state;
     let ownprops = Object.getOwnPropertyNames(state);
@@ -130,7 +130,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 		  return false;
 	  }
 	  if (label1) {
-		  console.log('found label');
+		  //console.log('found label');
 		  return true;
 	  }
 	  let ext1 = callDepth && externalToTree(n1);
@@ -147,7 +147,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
     let obprops1 = objectProperties(n1);
 	  let obprops2 = objectProperties(n2);
 	  if (!propsEquivalent(obprops1,obprops2)) {
-		  console.log('false 0');
+		  //console.log('false 0');
 		  return false
 	  }
 	  let ln = obprops1.length;

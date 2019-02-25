@@ -746,6 +746,8 @@ const highlightExtraNode = function (node) {
     allocateHighlights(ln+1);
     highlightNode(node,highlights[ln]);
     extraNodeHighlighted = node;
+  } else {
+    extraNodeHighlighted = undefined;
   }
 } 
   
@@ -771,6 +773,7 @@ const unhighlight = function () {
   highlightedNodes.forEach(function (node) {
     node.__highlight = undefined;
   });
+  extraNodeHighlighted = undefined;
 }
   
 
@@ -837,6 +840,18 @@ tag.text.update = function () {
     this.setText(d);
   }
 }
+
+
+let defaultTextPropertyValues = 
+         {"font-size":"12",
+         "font-style":"normal",
+         "font-family":"arial",
+         "font-weight":"normal",
+         "stroke":"black"
+         };
+
+
+let textProperties = Object.getOwnPropertyNames(defaultTextPropertyValues);
 
 tag.set("tspan",SvgElement.mk()).__namedType();
 tag.tspan.mk = function () {return Object.create(tag.tspan)};
@@ -1328,4 +1343,5 @@ const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];
 
 
 export {SvgRoot,SvgElement,tag as SvgTag,setSvgMain,svgMain,unhighlight,svg,highlightNodes,
-        highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties,installRoot};
+        highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties,installRoot,
+        defaultTextPropertyValues,textProperties};

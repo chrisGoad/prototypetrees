@@ -107,7 +107,6 @@ const referencePath = function (x,root) {
 }
 
 const encode = function (root) {
-  debugger;
   dependencies = {};
   externalReferences = [];
   let nodes = [];
@@ -250,7 +249,8 @@ const encode = function (root) {
         }
       }
     }
-    if (0 && ArrayNode.isPrototypeOf(x)) {
+    /*
+    if (ArrayNode.isPrototypeOf(x)) {
       debugger;
       let ln = x.length;
       for (let i=0;i<ln;i++) {
@@ -262,7 +262,7 @@ const encode = function (root) {
         addToResult('__parent',false);
       }
       return rs;
-    }
+    }*/
     let propNames = Object.getOwnPropertyNames(x);
     rs = undefined;
     propNames.forEach(function (prop) {

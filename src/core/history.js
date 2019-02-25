@@ -11,7 +11,7 @@ let afterSaveStateHooks = [];
 
 let historyFailed = false;
 const isDiff = (h) => Array.isArray(h);
-
+let afterHistoryFailureHooks = [];
 
 const addStateToHistory = function () { //complete state, that is
   //debugger;
@@ -29,7 +29,8 @@ const addStateToHistory = function () { //complete state, that is
   if (!map) {
 	  console.log('CollectNodes failed');
     historyFailed = true;
-	  debugger;// shouldn't happen
+	  console.log('history failure');// shouldn't happen
+    afterHistoryFailureHooks.forEach(fn);
   }
   history.push({map,state});
 
@@ -47,8 +48,8 @@ const mostRecentState = function () {
 }
   
 const saveState = function () {
-  debugger;
-  console.log('saveState');
+  //debugger;
+  //console.log('saveState');
   if (!vars.historyEnabled) {
 	return;
   }
@@ -111,7 +112,7 @@ const undo = function () {
       }
     }
   } else { // we have moved back to an old state with a different structure
-    debugger;
+    //debugger;
     root = copyState(m.state);
     remap(root,m.map); 
     if (pidx > midx) {
@@ -125,4 +126,4 @@ const undo = function () {
 }
 
 
-export {history,historyFailed,beforeSaveStateHooks,afterSaveStateHooks,saveState,afterRestoreStateHooks,undo};
+export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,afterRestoreStateHooks,undo};
