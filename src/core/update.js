@@ -193,7 +193,19 @@ const resetComputedArray = function (node,prop) {
 // data might be internal, in which case the __internalData and __internalDataString are set, or external, in which case .data is a value with a __sourceUrl
 
 const getData = function (node,idata) {
- 
+  if (idata) {
+    if (getval(idata,'__sourceUrl')) {
+      node.data = idata;
+    } else {
+      let data = core.lift(idata);
+      if (data.__parent) {
+        node.data = data;
+      } else {
+        node.set('data',data);
+      }
+    }
+    return node.data;
+  } 
   if (node.__internalData) {
     return node.__internalData;
   }
@@ -208,19 +220,7 @@ const getData = function (node,idata) {
     node.set("__internalData",data);
     return data;
   }
-  if (idata) {
-    if (idata.__get('__sourceUrl')) {
-      node.data = idata;
-    } else {
-      let data = core.lift(idata);
-      if (data.__parent) {
-        node.data = data;
-      } else {
-        node.set('data',data);
-      }
-    }
-    return node.data;
-  }
+  
   
 }
 

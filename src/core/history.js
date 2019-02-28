@@ -29,8 +29,9 @@ const addStateToHistory = function () { //complete state, that is
   if (!map) {
 	  console.log('CollectNodes failed');
     historyFailed = true;
+    debugger;
 	  console.log('history failure');// shouldn't happen
-    afterHistoryFailureHooks.forEach(fn);
+    afterHistoryFailureHooks.forEach((fn) => fn());
   }
   history.push({map,state});
 

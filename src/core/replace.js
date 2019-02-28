@@ -101,6 +101,10 @@ const transferState = function (dest,src,settings,own=true,forCopy) {
       kit.transferElementState(dest,src,own);
     }
   }
+  let transferGraphState = dest.transferGraphState;
+  if (transferGraphState) {
+    dest.transferGraphState(dest,src,own);
+  }
   setProperties(dest,src,['role','unselectable','neverselectable','visibility','__singleton']);
   dest.role = src.role;
   if (dest.resizable) {

@@ -16,10 +16,10 @@ const copyState = function (state) {
   return deserialize(serialize(state));
 }
 
-let debugDiff = false;
+vars.debugDiff = false;
 
 const diffDebug = (msg) => {
-  if (debugDiff) {
+  if (vars.debugDiff) {
     console.log('DEBUG DIFF ',msg);
     debugger;
   }

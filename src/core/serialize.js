@@ -265,8 +265,20 @@ const encode = function (root) {
     }*/
     let propNames = Object.getOwnPropertyNames(x);
     rs = undefined;
+    let isArray = ArrayNode.isPrototypeOf(x);
+    let ln;
+    if (isArray) {
+      ln = x.length;
+    }
     propNames.forEach(function (prop) {
-      addToResult(prop,atomic);
+      if (isArray) {
+        let n = Number(prop);
+        if (isNaN(n) || (n < ln)) {
+          addToResult(prop,atomic);
+        }
+      } else {
+        addToResult(prop,atomic);
+      }
     });
     return rs;
   }
