@@ -47,7 +47,21 @@ const mostRecentState = function () {
     }
   }
 }
-  
+
+const nullDiff = function (diff) {
+  return Object.getOwnPropertyNames(diff).length ===0;
+}
+
+const nullDiffs = function (diffs) {
+  let ln = diffs.length;
+  for (let i=0;i<ln;i++) {
+    if (!nullDiff(diffs[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const saveState = function (kind) {
   //debugger;
   //console.log('saveState');
@@ -62,7 +76,9 @@ const saveState = function (kind) {
     let lastState = history[mostRecentState()];
     let diffs = findAllDiffs(lastState.map);
     if (diffs) { 
-      history.push({diffs,kind});
+      if (!nullDiffs(diffs)) {
+        history.push({diffs,kind});
+      }
     } else { // need a new complete state
       addStateToHistory(kind);
     }
@@ -117,7 +133,7 @@ const undo = function () {
     root = copyState(m.state);
     remap(root,m.map); 
     if (pidx > midx) {
-      installDiffs(m.map,previous);
+      installDiffs(m.map,previous.diffs);
     }
     if (vars.installRoot) {
 	    vars.installRoot();

@@ -146,7 +146,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	  nodeMap.push({node1:n1,node2:n2});
     let obprops1 = objectProperties(n1);
 	  let obprops2 = objectProperties(n2);
-	  if (!propsEquivalent(obprops1,obprops2)) {
+	  if (!propsEquivalent(obprops1,obprops2,true)) {
 		  //console.log('false 0');
 		  return false
 	  }
@@ -280,9 +280,9 @@ const installMap = function (map) {
     ownprops1.forEach(function (p) {
       let child1 = node1[p];
       let child2 = node2[p]
-      if (child2 === 'undefined') {
+     /* if (child2 === 'undefined') {
          debugger;
-      }
+      }*/
       let obChild1 = Boolean(child1 && (typeof child1 === 'object'));
       if (!obChild1) {
         if (child1!== child2) {
