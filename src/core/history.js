@@ -10,10 +10,10 @@ let beforeSaveStateHooks = [];
 let afterSaveStateHooks = [];
 
 let historyFailed = false;
-const isDiff = (h) => Array.isArray(h);
+const isDiff = (h) => Boolean(h.diffs);
 let afterHistoryFailureHooks = [];
 
-const addStateToHistory = function () { //complete state, that is
+const addStateToHistory = function (kind) { //complete state, that is
   //debugger;
   clearLabels(root);
   let srcp = root.__sourceUrl;
@@ -33,7 +33,7 @@ const addStateToHistory = function () { //complete state, that is
 	  console.log('history failure');// shouldn't happen
     afterHistoryFailureHooks.forEach((fn) => fn());
   }
-  history.push({map,state});
+  history.push({map,state,kind});
 
 }
 
@@ -48,7 +48,7 @@ const mostRecentState = function () {
   }
 }
   
-const saveState = function () {
+const saveState = function (kind) {
   //debugger;
   //console.log('saveState');
   if (!vars.historyEnabled) {
@@ -57,14 +57,14 @@ const saveState = function () {
   beforeSaveStateHooks.forEach((fn) => {fn();});
   let ln = history.length;
   if (ln === 0) {
-	  addStateToHistory();
+	  addStateToHistory(kind);
   } else {
     let lastState = history[mostRecentState()];
     let diffs = findAllDiffs(lastState.map);
     if (diffs) { 
-      history.push(diffs);
+      history.push({diffs,kind});
     } else { // need a new complete state
-      addStateToHistory();
+      addStateToHistory(kind);
     }
   }
   afterSaveStateHooks.forEach((fn) => {fn();});
@@ -102,11 +102,11 @@ const undo = function () {
   let previous = history[pidx];
   let midx = mostRecentState();
   let m = history[midx];
-  if (isDiff(current)) { 
+  if (isDiff(current)) {
     if (pidx >= midx) {
       installMap(m.map);
       if (pidx > midx) {
-        installDiffs(m.map,previous);
+        installDiffs(m.map,previous.diffs);
       }
       if (vars.refresh) {
 	      vars.refresh();
