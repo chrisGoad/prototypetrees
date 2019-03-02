@@ -24,7 +24,6 @@ const addStateToHistory = function (kind) { //complete state, that is
   let map = collectNodes(state,root);// sets the global nodeMap
   root.__sourceUrl = srcp;
   afterSerialize.forEach(function (fn) {fn(root);});
-  //debugger;
   //let labelMap = buildLabelMap(state); // just for testing
   if (!map) {
 	  console.log('CollectNodes failed');
@@ -63,7 +62,6 @@ const nullDiffs = function (diffs) {
 }
 
 const saveState = function (kind) {
-  //debugger;
   //console.log('saveState');
   if (!vars.historyEnabled) {
 	return;

@@ -21,7 +21,7 @@ vars.debugDiff = false;
 const diffDebug = (msg) => {
   if (vars.debugDiff) {
     console.log('DEBUG DIFF ',msg);
-    debugger;
+    debugger;//keep
   }
 }
 
@@ -281,7 +281,7 @@ const installMap = function (map) {
       let child1 = node1[p];
       let child2 = node2[p]
      /* if (child2 === 'undefined') {
-         debugger;
+         debugger; //keep
       }*/
       let obChild1 = Boolean(child1 && (typeof child1 === 'object'));
       if (!obChild1) {

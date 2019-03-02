@@ -251,7 +251,7 @@ const encode = function (root) {
     }
     /*
     if (ArrayNode.isPrototypeOf(x)) {
-      debugger;
+      debugger; //keep
       let ln = x.length;
       for (let i=0;i<ln;i++) {
         addToResult(i,atomic);
