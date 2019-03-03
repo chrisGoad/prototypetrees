@@ -1142,6 +1142,13 @@ const ancestorWithProperty = function (node,prop) {
 }
 
 
+const ancestorWithOwnProperty = function (node,prop) {
+  return findAncestor(node,function (x) {
+      return getval(x,prop) !== undefined;
+  },1);
+}
+
+
 const ancestorWithPrototype = function (node,proto) {
   return findAncestor(node,function (x) {
       return proto.isPrototypeOf(x);
@@ -1908,7 +1915,7 @@ ObjectNode.setActiveProperty = function (prop,value) {
 
 
 const externalToTree = function (node) {
-  return (node!==root) && ((!getval(node,'__parent')) || Boolean(ancestorWithProperty(node,'__builtIn')));
+  return Boolean((node!==root) && ((!getval(node,'__parent')) || ancestorWithOwnProperty(node,'__builtIn') || ancestorWithOwnProperty(node,'__sourceUrl')));
 }
 const crossLinks = function (node) {
   let rs = [];

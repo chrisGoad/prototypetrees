@@ -14,21 +14,20 @@ const isDiff = (h) => Boolean(h.diffs);
 let afterHistoryFailureHooks = [];
 
 const addStateToHistory = function (kind) { //complete state, that is
-  //debugger;
   clearLabels(root);
   let srcp = root.__sourceUrl;
   root.__sourceUrl = undefined;// for reference generaation in externalize
   beforeSerialize.forEach(function (fn) {fn(root);});
   let s = encode(root);
   let state = deserialize(s);
-  let map = collectNodes(state,root);// sets the global nodeMap
+  let map = collectNodes(state,root);
   root.__sourceUrl = srcp;
   afterSerialize.forEach(function (fn) {fn(root);});
   //let labelMap = buildLabelMap(state); // just for testing
   if (!map) {
 	  console.log('CollectNodes failed');
     historyFailed = true;
-    debugger;
+    debugger;  //keep
 	  console.log('history failure');// shouldn't happen
     afterHistoryFailureHooks.forEach((fn) => fn());
   }
@@ -37,14 +36,17 @@ const addStateToHistory = function (kind) { //complete state, that is
 }
 
 
-const mostRecentState = function () {
-  let ln = history.length;
-  for (let i=ln-1;i>=0;i--) {
+const previousState = function (n) {
+  for (let i=n;i>=0;i--) {
     let h = history[i];
     if (!isDiff(h)) {
       return i;
     }
   }
+}
+
+const mostRecentState = function () {
+  return previousState(history.length - 1);
 }
 
 const nullDiff = function (diff) {
@@ -60,6 +62,7 @@ const nullDiffs = function (diffs) {
   }
   return true;
 }
+let currentHistoryIndex = -1;
 
 const saveState = function (kind) {
   //console.log('saveState');
@@ -75,13 +78,14 @@ const saveState = function (kind) {
     let diffs = findAllDiffs(lastState.map);
     if (diffs) { 
       if (!nullDiffs(diffs)) {
-        history.push({diffs,kind});
+        history.push({diffs,kind});  // add a diff 
       }
     } else { // need a new complete state
       addStateToHistory(kind);
     }
   }
   afterSaveStateHooks.forEach((fn) => {fn();});
+  currentHistoryIndex = history.length - 1;
 
 }
 
@@ -102,43 +106,60 @@ const installMostRecentState = function () {
   }
 }
 */
-const undo = function () {
-  //debugger;
+
+
+const gotoState= function (n) { // goes to a state, or diff
   if (!vars.historyEnabled) {
     return;
   }
   let ln = history.length;
-  if (ln <= 1) {
+  if ((n >= ln) || (currentHistoryIndex === n)) {
     return;
   }
-  let current = history.pop();
-  let pidx = ln-2;
-  let previous = history[pidx];
-  let midx = mostRecentState();
-  let m = history[midx];
-  if (isDiff(current)) {
-    if (pidx >= midx) {
-      installMap(m.map);
-      if (pidx > midx) {
-        installDiffs(m.map,previous.diffs);
-      }
-      if (vars.refresh) {
-	      vars.refresh();
-      }
+  let current = history[currentHistoryIndex];
+  let destination = history[n];
+  let currentStateIndex = previousState(currentHistoryIndex);
+  let destStateIndex = previousState(n);
+  let destState = history[destStateIndex];
+  if (currentStateIndex === destStateIndex) { // only need to install a diff
+    installMap(destState.map);
+    if (n > destStateIndex) {
+      installDiffs(destState.map,destination.diffs);
     }
-  } else { // we have moved back to an old state with a different structure
+  } else { // we have moved to a new state 
     //debugger;
-    root = copyState(m.state);
-    remap(root,m.map); 
-    if (pidx > midx) {
-      installDiffs(m.map,previous.diffs);
+    root = copyState(destState.state);
+    remap(root,destState.map); 
+    if (n > destStateIndex) {
+      installDiffs(destState.map,destination.diffs);
     }
     if (vars.installRoot) {
 	    vars.installRoot();
     }
   }
+  if (vars.refresh) {
+	   vars.refresh();
+  }
   afterRestoreStateHooks.forEach((fn) => {fn();});
+  currentHistoryIndex = n;
 }
 
 
-export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,afterRestoreStateHooks,undo};
+const undo = function () {
+  let ln = history.length;
+  if (ln > 1) {
+    gotoState(currentHistoryIndex-1);
+    // history.pop();
+  } 
+}
+
+const next = function () {
+  let ln = history.length; 
+  if (currentHistoryIndex < ln-1) {
+    gotoState(currentHistoryIndex  + 1);
+  }
+}
+
+
+export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,
+        gotoState,undo,next,currentHistoryIndex,afterRestoreStateHooks};

@@ -44,7 +44,9 @@ const buildLabelMap = function (stateTop) {
         if (!externalToTree(proto)) {
           R(proto);
         }
-        R(child);
+        if (!externalToTree(child)) {
+          R(child);
+        }
       };
     });
     return map;
@@ -124,7 +126,6 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	 // n1.__label = n2.label = labelCount++;
 	  let  label1 = getval(n1,'__label');
 	  let  label2 = getval(n2,'__label');
-	 
 	  if (label1 !== label2) {
 		  diffDebug('label mismatch false');
 		  return false;
@@ -278,8 +279,13 @@ const installMap = function (map) {
   map.forEach(function ({node1,node2}) {
 	  let ownprops1 = Object.getOwnPropertyNames(node1);
     ownprops1.forEach(function (p) {
+      if (node2 === undefined) {
+         debugger;
+         return;
+      }
       let child1 = node1[p];
-      let child2 = node2[p]
+      let child2 = node2[p];
+
      /* if (child2 === 'undefined') {
          debugger; //keep
       }*/
@@ -289,8 +295,8 @@ const installMap = function (map) {
           node2[p] = child1;
         }
       }
-      cnt++;
 	  });
+    cnt++;
     // we might have to remove some added properties
     let ownprops2 = Object.getOwnPropertyNames(node2);
     ownprops2.forEach(function (p) {
