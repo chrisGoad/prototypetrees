@@ -337,4 +337,4 @@ const stringify = function (node) {
   return  prettyJSON?JSON.stringify(x,null,4):JSON.stringify(x);
 }
 
-export {serialize,stringify,referencePath,beforeSerialize,afterSerialize};
+export {encode,serialize,stringify,referencePath,beforeSerialize,afterSerialize};

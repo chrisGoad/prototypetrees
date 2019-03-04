@@ -64,6 +64,9 @@ const nullDiffs = function (diffs) {
 }
 let currentHistoryIndex = -1;
 
+const canRedo = () => (history.length > (currentHistoryIndex + 1));
+
+  
 const saveState = function (kind) {
   //console.log('saveState');
   if (!vars.historyEnabled) {
@@ -71,13 +74,16 @@ const saveState = function (kind) {
   }
   beforeSaveStateHooks.forEach((fn) => {fn();});
   let ln = history.length;
-  if (ln === 0) {
+  if (currentHistoryIndex < (ln-1)) {
+    history.length = currentHistoryIndex+1;
+  }
+  if (currentHistoryIndex < 0) {
 	  addStateToHistory(kind);
   } else {
     let lastState = history[mostRecentState()];
     let diffs = findAllDiffs(lastState.map);
     if (diffs) { 
-      if (!nullDiffs(diffs)) {
+      if (diffs !== 'none') {
         history.push({diffs,kind});  // add a diff 
       }
     } else { // need a new complete state
@@ -160,6 +166,54 @@ const next = function () {
   }
 }
 
+let stepInterval = 1000;
+
+const oneStepPromise = function (interval,then) {
+   let pr = new Promise(function (resolve,reject) {
+     debugger;
+     let ln = history.length;
+     if (currentHistoryIndex === ln -1) {
+      resolve("end");
+     } else {
+        setTimeout(() => {
+          next();
+         resolve('step')
+        },interval);
+     }
+   });
+   pr.then(then);
+}
+
+const oneStep =function (intv=1000) {
+  oneStepPromise(intv,(val) => console.log("Finished one step",val));
+}
+
+const animate = function (intv=1000) {
+  let then;
+  then = function (val) {
+    debugger;
+    if (val === 'step') {
+      oneStepPromise(intv,then);
+    } else {
+      console.log('finished animation');
+    }
+  }
+  oneStepPromise(intv,then);
+}
+
+const encodeHistory = function () {
+  return history.map((h) => isDiff(h)?h:{state:encode(h.state),map:encodeMap(h.state,h.map),kind:h.kind});
+}
+
+const githubTest = function () {
+  httpGet('https://raw.githubusercontent.com/chrisGoad/prototypetrees/dev/src/core/basic_ops.js',
+          function (erm,rs) {
+              debugger;
+          });
+}
+
+  
 
 export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,
-        gotoState,undo,next,currentHistoryIndex,afterRestoreStateHooks};
+        gotoState,undo,next,canRedo,currentHistoryIndex,afterRestoreStateHooks,oneStep,animate,encodeHistory,
+        githubTest};

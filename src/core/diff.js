@@ -62,6 +62,12 @@ const remap = function (state,map) {
     mapEl.node2 = labelMap[label];
   });
 }
+
+const encodeMap = function (state,map) {
+  let labelMap = buildLabelMap(state);
+  return map.map((mapEl) => stringPathOf(mapEl.node1,state));
+}
+  
     
       
   
@@ -204,6 +210,7 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 }
   
 const findDiff = function (n1,n2) {
+  let foundADiff = false;
   let ownprops1 = Object.getOwnPropertyNames(n1);
   let ownprops2 = Object.getOwnPropertyNames(n2);
   let obprops1 = objectProperties(n1);
@@ -252,25 +259,28 @@ const findDiff = function (n1,n2) {
       }
     }
     if (child1 !== child2) {
+      foundADiff = true;
       diffs[p] = child2;
     }
   }
-  return diffs;
+  return foundADiff?diffs:'none';
 }
 
 const findAllDiffs = function (map) {
+  let foundADiff = false;
   let ln = map.length;
-  let diffs = [];
+  let diffs = {};
   for (let i=0;i<ln;i++) {
     let mapEl = map[i];
     let diff = findDiff(mapEl.node1,mapEl.node2);
-    if (diff) {
-      diffs.push(diff);
-    } else {
+    if (diff===false) {
       return false;
-    }
+    } else if (diff && (diff!=='none')) {
+      foundADiff = true;
+      diffs[i] = diff;
+    } 
   }
-  return diffs;
+  return foundADiff?diffs:'none';
 }
 // installs the state represented by the map, without diffs
 const installMap = function (map) {
@@ -319,14 +329,17 @@ const installMap = function (map) {
   
 
 const installDiffs = function (map,diffs) {
-  let ln = map.length;
-  for (let i=0;i<ln;i++) {
+  debugger;
+  //let ln = map.length;
+  for (let i in diffs) {
+  //for (let i=0;i<ln;i++) {
     let node2 = map[i].node2;
     let diff = diffs[i];
-    let props = Object.getOwnPropertyNames(diff);
-    props.forEach(function (p) {
+    for (let p in diff) {
+    //let props = Object.getOwnPropertyNames(diff);
+    //props.forEach(function (p) {
       node2[p] = diff[p];
-    });
+    };
   }
 }
 
