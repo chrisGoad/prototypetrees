@@ -398,6 +398,18 @@ let require = function () {
 }
 
 
+const loadRequires = function (requires,cb) {
+  if (cb) {
+     afterInstall = cb;
+  }
+  resetLoadVars();
+  requireRoot = 'zub';
+  installedItems.zub = 1;
+  let arequires = requires.map(function (url) {return absoluteUrl(url,'/');});
+  requireEdges['zub'] = [].concat(arequires);
+  require1('zub',arequires);
+}
+
 const loadItem = function (src) {
   httpGetForInstall(src,function (erm,rs) {
     installDebug();

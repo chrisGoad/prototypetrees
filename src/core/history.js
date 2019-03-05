@@ -205,6 +205,24 @@ const encodeHistory = function () {
   return history.map((h) => isDiff(h)?h:{state:encode(h.state),map:encodeMap(h.state,h.map),kind:h.kind});
 }
 
+const decodeMap = function (state,map) {
+  return map.map(function (path) {
+    return {node1:evalPath(state,path)};
+  });
+}
+   
+
+const decodeHistory = function (h) {
+  return h.map((he) => {
+   if (isDiff(he)) return he;
+   let state = deserialize(he.state);
+   let map = decodeMap(state,he.map);
+   let kind = he.kind;
+   return {state,map,kind};
+  });
+}
+
+
 const githubTest = function () {
   httpGet('https://raw.githubusercontent.com/chrisGoad/prototypetrees/dev/src/core/basic_ops.js',
           function (erm,rs) {
@@ -212,8 +230,63 @@ const githubTest = function () {
           });
 }
 
+const turnIntoPromise = function (fn,input) {
+  return new Promise(
+    function (resolve,reject) {
+      fn(input,function (err,rs) {
+        if (err) { 
+          reject(err); 
+        } else {
+          resolve(rs);
+        }
+      });
+    });
+}
+
+/*
+const httpGetPromise = function (url) {
+  return new Promise(
+    function (resolve,reject) {
+      httpGetForInstall(url,function (err,rs) {
+        if (err) { 
+          reject(err); 
+        } else {
+          resolve(rs);
+        }
+      });
+    });
+}
+*/
+const collectRequires = function (h) {
+  let accum = {};
+  h.forEach(function (he) {
+    if (!isDiff(he)) {
+      let requires = he.state.__requires;
+      requires.forEach(function (rq) {
+        accum[rq] = 1;
+      });
+    }
+  });
+  return Object.getOwnPropertyNames(accum);
+}
+      
+
+async function installHistory(isrc,cb) {
+  //let jrs = await httpGetPromise(isrc);
+  let jrs = await turnIntoPromise(httpGetForInstall,isrc);
+  let rs = JSON.parse(jrs);
+  debugger;
+  let requires = collectRequires(rs);
+  //await turnIntoPromise(loadRequires,['/shape/circle.js']);//requires);
+  await turnIntoPromise(loadRequires,requires);
+  debugger;
+  history = decodeHistory(rs);
+
+}
+
+
   
 
 export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,
         gotoState,undo,next,canRedo,currentHistoryIndex,afterRestoreStateHooks,oneStep,animate,encodeHistory,
-        githubTest};
+        githubTest,installHistory};
