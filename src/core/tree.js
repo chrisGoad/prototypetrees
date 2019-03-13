@@ -1242,7 +1242,7 @@ nodeMethod('remove',function (dontRemoveFromArray) {
     }
   } else {
     let anm = __name;
-    if (parent[anm] !== this)  { // check from ghost bug
+    if (parent[anm] !== this)  { // check for ghost bug
       error('ghost bug back');
     }
     delete parent[anm];

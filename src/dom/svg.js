@@ -157,6 +157,9 @@ SvgElement.__children = function () {
   });
   return rs;
 }
+
+core.ArrayNode.__children = SvgElement.__children;
+
 // readd all of the children with indices > index
 SvgElement.__removeChildrenInFront = function (index) {
   let children = this.__children();
@@ -175,7 +178,7 @@ SvgElement.__removeChildrenInFront = function (index) {
   return rs;
 }
 
-
+core.ArrayNode.__removeChildrenInFront = SvgElement.__removeChildrenInFront;
 
 
 // replaces a child while keeping the order of children
@@ -194,6 +197,8 @@ SvgElement.__replaceChild = function(child,replacement) {
     pel.appendChild(el);
   });
 }
+
+core.ArrayNode.__replaceChild = SvgElement.__replaceChild;
 
 SvgElement.__reorderBySetIndex = function() {
   let pel = this.__element;
