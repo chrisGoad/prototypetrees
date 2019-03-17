@@ -10,14 +10,17 @@ let stateStash;
   
 const stashPreSave = function (itm,needRestore) {
   stateStash = needRestore?{}:undefined;
+  domStash = needRestore?{}:undefined;
+  stashDom(itm,domStash);
+  
   if (needRestore) {
     core.setProperties(stateStash,itm,propsToStash,true);
   }
   propsToStash.forEach(function (p) {
     delete itm[p];
   });
-  domStash = needRestore?{}:undefined;
-  stashDom(itm,domStash);
+  //domStash = needRestore?{}:undefined;
+  //stashDom(itm,domStash);
   computeStash = needRestore?{}:undefined;
   core.removeComputed(itm,computeStash);
 } 

@@ -142,9 +142,11 @@ SvgElement.__bringToFront = function () {
   let pel;
   if (el) {
     pel = el.parentNode;
-    pel.removeChild(el);
+    if (pel) {
+      pel.removeChild(el);
     //svg.frontShape = this;
-    pel.appendChild(el);
+      pel.appendChild(el);
+    }
   }
 }
 
