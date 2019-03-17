@@ -100,10 +100,10 @@ const transferState = function (dest,src,settings,own=true,forCopy) {
     if (kit && kit.transferElementState) {
       kit.transferElementState(dest,src,own);
     }
-  }
-  let transferGraphState = dest.transferGraphState;
-  if (transferGraphState) {
-    dest.transferGraphState(dest,src,own);
+    let transferGraphState = dest.transferGraphState;
+    if (transferGraphState) {
+      dest.transferGraphState(dest,src,own);
+    }
   }
   setProperties(dest,src,['role','unselectable','neverselectable','visibility','__singleton']);
   dest.role = src.role;
@@ -194,6 +194,7 @@ ObjectNode.swapThisPrototype = function (replacementProto) {
 // TransferState is used to populate the copy, and the result is added as a sibling of item in the tree
 
 const copyItem = function (item,iunder) {
+  debugger;
   let proto = Object.getPrototypeOf(item);
   let rs = proto.instantiate();
   transferState(rs,item,undefined,true,true);
