@@ -194,7 +194,6 @@ ObjectNode.swapThisPrototype = function (replacementProto) {
 // TransferState is used to populate the copy, and the result is added as a sibling of item in the tree
 
 const copyItem = function (item,iunder) {
-  debugger;
   let proto = Object.getPrototypeOf(item);
   let rs = proto.instantiate();
   transferState(rs,item,undefined,true,true);

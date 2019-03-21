@@ -1953,7 +1953,34 @@ const crossLinks = function (node) {
 }
     
     
+const referencedPrototypes = function () {
+  //debugger;
+  let rs = [];
+  let protos = root.prototypes;
+  const recurse = (nd) => {
+    if (nd === protos) {
+      return;
+    }
+    if (ancestorHasOwnProperty(nd,'__builtIn') || ancestorHasOwnProperty(nd,'__sourceUrl')) {
+      return;
+    }
+    let proto = Object.getPrototypeOf(nd);
+    if (getval(proto,'__parent') === protos) {
+      let nm = proto.__name;
+      if (rs.indexOf(nm) === -1) {
+        rs.push(nm) ;
+      }
+    }
+    recurse(proto);
+    forEachTreeProperty(nd,recurse);
+  }
+  recurse(root);
+  return rs;
+}
  
+
+
+    
 
 
 export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,crossTreeLinks,
@@ -1961,6 +1988,6 @@ export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,cr
         isNode,ancestorHasOwnProperty,isAtomic,treeProperties,autoname,removeChildren,beforeChar,afterChar,
         isDescendantOf,findAncestor,ancestorWithProperty,ancestorWithPropertyFalse,ancestorWithPropertyTrue,ancestorWithPropertyValue,
         nDigits,evalPath,inheritors,forInheritors,pathToString,climbCount,pOf,setPropertiesIfMissing,
-        isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,
+        isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,referencedPrototypes,
         newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,deepCopy,allCrossLinks
         };

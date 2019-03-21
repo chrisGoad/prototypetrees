@@ -290,7 +290,6 @@ const installMap = function (map) {
 	  let ownprops1 = Object.getOwnPropertyNames(node1);
     ownprops1.forEach(function (p) {
       if (node2 === undefined) {
-         debugger;
          return;
       }
       let child1 = node1[p];
@@ -329,7 +328,6 @@ const installMap = function (map) {
   
 
 const installDiffs = function (map,diffs) {
-  debugger;
   //let ln = map.length;
   for (let i in diffs) {
   //for (let i=0;i<ln;i++) {

@@ -25,10 +25,10 @@ const addStateToHistory = function (kind) { //complete state, that is
   afterSerialize.forEach(function (fn) {fn(root);});
   //let labelMap = buildLabelMap(state); // just for testing
   if (!map) {
-	  console.log('CollectNodes failed');
+	  console.log('CollectNodes failed');//keep
     historyFailed = true;
     debugger;  //keep
-	  console.log('history failure');// shouldn't happen
+	  console.log('history failure');// shouldn't happen; keep
     afterHistoryFailureHooks.forEach((fn) => fn());
   }
   history.push({map,state,kind});
@@ -170,7 +170,6 @@ let stepInterval = 1000;
 
 const oneStepPromise = function (interval,then) {
    let pr = new Promise(function (resolve,reject) {
-     debugger;
      let ln = history.length;
      if (currentHistoryIndex === ln -1) {
       resolve("end");
@@ -185,17 +184,16 @@ const oneStepPromise = function (interval,then) {
 }
 
 const oneStep =function (intv=1000) {
-  oneStepPromise(intv,(val) => console.log("Finished one step",val));
+  oneStepPromise(intv,(val) => {});//console.log("Finished one step",val));
 }
 
 const animate = function (intv=1000) {
   let then;
   then = function (val) {
-    debugger;
     if (val === 'step') {
       oneStepPromise(intv,then);
     } else {
-      console.log('finished animation');
+      //console.log('finished animation');
     }
   }
   oneStepPromise(intv,then);
@@ -226,7 +224,7 @@ const decodeHistory = function (h) {
 const githubTest = function () {
   httpGet('https://raw.githubusercontent.com/chrisGoad/prototypetrees/dev/src/core/basic_ops.js',
           function (erm,rs) {
-              debugger;
+              debugger; //keep
           });
 }
 
@@ -275,11 +273,9 @@ async function installHistory(isrc,cb) {
   //let jrs = await httpGetPromise(isrc);
   let jrs = await turnIntoPromise(httpGetForInstall,isrc);
   let rs = JSON.parse(jrs);
-  debugger;
   let requires = collectRequires(rs);
   //await turnIntoPromise(loadRequires,['/shape/circle.js']);//requires);
   await turnIntoPromise(loadRequires,requires);
-  debugger;
   history = decodeHistory(rs);
 
 }
