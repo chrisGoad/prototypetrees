@@ -152,6 +152,7 @@ const ireplace = function (replaced,replacementProto,climbCount,settings) {
     replacement.set(settings);
   }
   parent.__replaceChild(replaced,replacement); // keeps the order of children intact; FORWARD REFERENCE
+  parent.draw(); // only for debugging
   if (replacement.initialize && !inPrototypesTree) {  transferState(replacement,replaced,undefined,!inPrototypesTree/*own*/);
     replacement.initialize();
   }

@@ -200,7 +200,7 @@ SvgElement.__replaceChild = function(child,replacement) {
   });
 }
 
-core.ArrayNode.__replaceChild = SvgElement.__replaceChild;
+core.ArrayNode.__replaceChild =  SvgElement.__replaceChild;
 
 SvgElement.__reorderBySetIndex = function() {
   let pel = this.__element;

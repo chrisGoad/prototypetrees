@@ -401,8 +401,13 @@ ObjectNode.set = function (key,val) {
   return val;
 }
 
+// this only works if key < length of the array
 
 ArrayNode.set = function (key,val) {
+  let ln = this.length;
+  if (key >= ln) {
+    error('Incorrect use of ArrayNode.set');
+  }
   setChild(this,key,val);
   return val;
 }

@@ -532,7 +532,9 @@ core.ArrayNode.__iterDomTree = function (fn) {
   // this needs to work before core.ComputedField is defined
   let prv = node.__get(nm);
   if (prv && __isDomEl(prv)) {
-    prv.remove();
+    let isArray = Array.isArray(node);
+    removeElement(prv);
+   // prv.remove(); changed to removeElement 3/22/19
   }
 });
   
