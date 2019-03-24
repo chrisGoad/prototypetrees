@@ -1982,6 +1982,21 @@ const referencedPrototypes = function () {
   recurse(root);
   return rs;
 }
+
+const removeUnusedPrototypes = function () {
+  if (!root.prototypes) {
+    return;
+  }
+  let refs = referencedPrototypes();
+  let unreffed = [];
+  forEachTreeProperty(root.prototypes,(proto) => {
+    if (refs.indexOf(proto.__name) === -1) {
+      unreffed.push(proto);
+    }
+  });
+  unreffed.forEach((proto) => proto.remove());
+}
+    
  
 
 
@@ -1993,6 +2008,6 @@ export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,cr
         isNode,ancestorHasOwnProperty,isAtomic,treeProperties,autoname,removeChildren,beforeChar,afterChar,
         isDescendantOf,findAncestor,ancestorWithProperty,ancestorWithPropertyFalse,ancestorWithPropertyTrue,ancestorWithPropertyValue,
         nDigits,evalPath,inheritors,forInheritors,pathToString,climbCount,pOf,setPropertiesIfMissing,
-        isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,referencedPrototypes,
+        isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,referencedPrototypes,removeUnusedPrototypes,
         newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,deepCopy,allCrossLinks
         };

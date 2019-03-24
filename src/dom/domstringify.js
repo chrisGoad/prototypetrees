@@ -8,7 +8,7 @@ let computeStash;
 let domStash;
 let stateStash;
   
-const stashPreSave = function (itm,needRestore) {
+const stashPreSave = function (itm,needRestore,removeComputed=true) {
   stateStash = needRestore?{}:undefined;
   domStash = needRestore?{}:undefined;
   stashDom(itm,domStash);
@@ -21,18 +21,24 @@ const stashPreSave = function (itm,needRestore) {
   });
   //domStash = needRestore?{}:undefined;
   //stashDom(itm,domStash);
-  computeStash = needRestore?{}:undefined;
-  core.removeComputed(itm,computeStash);
+  if (removeComputed) {
+    computeStash = needRestore?{}:undefined;
+    core.removeComputed(itm,computeStash);
+  }
 } 
   
   
 core.beforeSerialize.push( function (itm) {stashPreSave(itm,1)});
+core.beforeSerializeState.push( function (itm) {stashPreSave(itm,1,false)});
 
-const restoreAfterSave = function (itm) {
+const restoreAfterSave = function (itm,restoreComputed=true) {
   core.setProperties(itm,stateStash,propsToStash,true,true);//fromOwn,dontCopy
-  core.restoreComputed(itm,computeStash);
+  if (restoreComputed) {
+    core.restoreComputed(itm,computeStash);
+  }
   restoreDom(itm,domStash);
 }
     
 core.afterSerialize.push(restoreAfterSave);
+core.afterSerializeState.push(function (itm) {restoreAfterSave(itm,false)});
 

@@ -109,9 +109,9 @@ const objectProperties = (node) => {
   ownprops.forEach((p) => {
     let child = node[p];
     if (child && (typeof child === 'object')) {
-      if (!child.__computed) {
-        rs.push(p);
-      }
+     // if (!child.__computed) {
+     rs.push(p);
+     // }
     }
   });
   return rs;
@@ -130,6 +130,15 @@ const collectNodes = function (n1,n2) { // traverse the trees in order given by 
 	  
 	const collectNodesR = function (n1,n2,callDepth=0) { // traverse the trees in order given by the ownprops of n1
 	 // n1.__label = n2.label = labelCount++;
+    /*let computed1 = n1.__computed;
+    let computed2 = n2.__computed;
+     if (computed1 !== computed2) {
+		  diffDebug('label mismatch false');
+		  return false;
+	  }
+    if (computed1) {
+      return true;
+    }*/
 	  let  label1 = getval(n1,'__label');
 	  let  label2 = getval(n2,'__label');
 	  if (label1 !== label2) {

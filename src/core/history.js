@@ -12,17 +12,20 @@ let afterSaveStateHooks = [];
 let historyFailed = false;
 const isDiff = (h) => Boolean(h.diffs);
 let afterHistoryFailureHooks = [];
+let beforeSerializeState = [];
+let afterSerializeState = [];
 
 const addStateToHistory = function (kind) { //complete state, that is
   clearLabels(root);
   let srcp = root.__sourceUrl;
   root.__sourceUrl = undefined;// for reference generaation in externalize
-  beforeSerialize.forEach(function (fn) {fn(root);});
+  //beforeSerialize.forEach(function (fn) {fn(root);});
+  beforeSerializeState.forEach(function (fn) {fn(root);});
   let s = encode(root);
   let state = deserialize(s);
   let map = collectNodes(state,root);
   root.__sourceUrl = srcp;
-  afterSerialize.forEach(function (fn) {fn(root);});
+  afterSerializeState.forEach(function (fn) {fn(root);});
   //let labelMap = buildLabelMap(state); // just for testing
   if (!map) {
 	  console.log('CollectNodes failed');//keep
@@ -68,6 +71,7 @@ const canRedo = () => (history.length > (currentHistoryIndex + 1));
 
   
 const saveState = function (kind) {
+  //debugger;
   //console.log('saveState');
   if (!vars.historyEnabled) {
 	return;
@@ -77,18 +81,23 @@ const saveState = function (kind) {
   if (currentHistoryIndex < (ln-1)) {
     history.length = currentHistoryIndex+1;
   }
-  if (currentHistoryIndex < 0) {
-	  addStateToHistory(kind);
-  } else {
-    let lastState = history[mostRecentState()];
-    let diffs = findAllDiffs(lastState.map);
-    if (diffs) { 
-      if (diffs !== 'none') {
-        history.push({diffs,kind});  // add a diff 
-      }
-    } else { // need a new complete state
+  // put this all in a catch, because we must be certain to run afterSaveStateHooks
+  try {
+    if (currentHistoryIndex < 0) {
       addStateToHistory(kind);
+    } else {
+      let lastState = history[mostRecentState()];
+      let diffs = findAllDiffs(lastState.map);
+      if (diffs) { 
+        if (diffs !== 'none') {
+          history.push({diffs,kind});  // add a diff 
+        }
+      } else { // need a new complete state
+        addStateToHistory(kind);
+      }
     }
+  } catch (e) {
+    error('Problem in saving state');
   }
   afterSaveStateHooks.forEach((fn) => {fn();});
   currentHistoryIndex = history.length - 1;
@@ -115,6 +124,7 @@ const installMostRecentState = function () {
 
 
 const gotoState= function (n) { // goes to a state, or diff
+  //debugger;
   if (!vars.historyEnabled) {
     return;
   }
@@ -285,4 +295,4 @@ async function installHistory(isrc,cb) {
 
 export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,
         gotoState,undo,next,canRedo,currentHistoryIndex,afterRestoreStateHooks,oneStep,animate,encodeHistory,
-        githubTest,installHistory};
+        githubTest,installHistory,beforeSerializeState,afterSerializeState};
