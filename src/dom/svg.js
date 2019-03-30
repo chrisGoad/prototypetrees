@@ -135,8 +135,7 @@ SvgElement.__visible = function () {
 }
 
   
-  // if bringToFront is true, then the element should be not removed, but just moved out as the last child of its parent
-  // overrides dom.Element.remove
+  
 SvgElement.__bringToFront = function () {
   let el = this.__element;
   let pel;
@@ -146,6 +145,35 @@ SvgElement.__bringToFront = function () {
       pel.removeChild(el);
     //svg.frontShape = this;
       pel.appendChild(el);
+    }
+  }
+}
+
+SvgElement.__moveToBack = function () {
+  debugger;
+  let el = this.__element;
+  let pel;
+  let exceptThis = [];
+  if (el) {
+    pel = el.parentNode;
+    if (pel) {
+      let cnt = 2;
+      let children = this.__parent.__children();
+      sortByIndex(children);
+      this.__setIndex = 1;
+      children.forEach( (child) => {
+        if (child !== this) {
+          let el = child.__element;
+          if (el) {
+            exceptThis.push(el);
+            pel.removeChild(el);
+            child.__setIndex = cnt++;
+          }
+        }
+      });
+      exceptThis.forEach((childEl) => {
+        pel.appendChild(childEl);
+      });
     }
   }
 }
