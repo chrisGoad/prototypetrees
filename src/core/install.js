@@ -531,9 +531,24 @@ const checkSyntax = function (code)  {
   }
   require = svRequire;
 }
+//  this is used in the code editor
+// a file "standsAlone" if it is suitable for loading into the code editor as the top level js
+
+const standsAloneObject = {};
+
+const standsAlone = (url) => {
+  if (Array.isArray(url)) {
+    url.forEach((aurl) => standsAloneObject[aurl] = true);
+  } else {
+    standsAloneObject[url] = true;
+  }
+}
+
+const standsAloneP = (url) => Boolean(standsAloneObject[url]);
+
 
 export {httpGetForInstall,loadjs,install,require,debugMode,requireEdges,loadedUrls,replaceRequireInItem,
         findPrototypeWithUrl,loadedScripts,installedItems,resetInstalledItems,afterLoadTop,
-        absoluteUrl,loadTopDefs,checkSyntax,assemblyParts,importItem};
+        absoluteUrl,loadTopDefs,checkSyntax,assemblyParts,importItem,standsAlone,standsAloneP};
         
         
