@@ -548,11 +548,11 @@ tag.polygon.__svgStringR = function (dst) {
 
 tag.set("linearGradient",SvgElement.mk()).__namedType();
 
-tag.linearGradient.__domTransfers = svgCommonTransfers.concat(['x1','y1','x2','y2']);
+tag.linearGradient.__domTransfers = svgCommonTransfers.concat(['x1','y1','x2','y2','gradientTransform']);
 
 tag.set("radialGradient",SvgElement.mk()).__namedType();
 
-tag.radialGradient.__domTransfers = svgCommonTransfers;
+tag.radialGradient.__domTransfers = svgCommonTransfers.concat(['r','cx','cy','fx','fy']);
 
 tag.set("stop",SvgElement.mk()).__namedType();
 
