@@ -1712,27 +1712,44 @@ const numericalSuf = function (string) {
   return Number(string);
 }
 
-// c = max after decimal place; @todo adjust for .0000 case
+const numZeros = function (n) { // how many zeros after decimal point for numbers less than 1
+  return (n>=1)?0:numZeros(10*n)+1;
+}
+    
+// c = max after decimal place, if abs(1) ow num digits after the zeros
 const nDigits = function (n,d) {
-  let ns,dp,ln,bd,ad;
+  let ns,dp,ln,bd,ad,boost,boosted,rs;
   if (typeof n !=="number") {
     return n;
   }
+  let nzeros = numZeros(Math.abs(n));
+  if (nzeros > 0) {
+    boost = Math.pow(10,nzeros); // to boost abs(n) above 1
+    boosted = n*boost;
+  } else {
+    boosted = n;
+  }
   let pow = Math.pow(10,d);
   let unit = 1/pow;
-  let rounded = Math.round(n/unit)/pow;
+  let rounded = Math.round(boosted/unit)/pow;
   ns = String(rounded);
+  if (nzeros > 0) {
+    rs = rounded/boost;
+    return rs;
+  }
   dp = ns.indexOf(".");
   if (dp < 0) {
-    return ns;
+   return ns;
   }
   ln = ns.length;
   if ((ln - dp -1)<=d) {
+    console.log('ns',ns);
     return ns;
   }
   bd = ns.substring(0,dp);
   ad = ns.substring(dp+1,dp+d+1)
-  return bd + "." + ad;
+  rs = bd + "." + ad;
+  return rs;
 }
 
 ArrayNode.__copy = function (copyElement) {

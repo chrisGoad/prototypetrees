@@ -302,6 +302,7 @@ const encode = function (root) {
   assignCode(root,0);
   findObjects();
   theObjects.forEach(buildChain);
+  debugger;
   buildProperties();
   let rs = {};
   rs.chains = chains;

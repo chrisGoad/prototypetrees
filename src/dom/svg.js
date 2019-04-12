@@ -7,7 +7,9 @@ const mkWithVis = function (pr) {
   rs.visibility = "inherit";
   return rs;
 }
-  
+
+const lessDigits = (n) => core.nDigits(n,5);
+
 let svgNamespace = "http://www.w3.org/2000/svg";
 
 // a Root is separate svg element. At the moment only one is in use: svgMain
@@ -325,6 +327,7 @@ tag.svg.mk = function () {
   return Object.create(tag.svg);
 }
 
+
 tag.set("g",SvgElement.mk()).__namedType();
 
 tag.g.__domTransfers =svgCommonTransfers;
@@ -332,6 +335,25 @@ tag.g.__domTransfers =svgCommonTransfers;
 
 tag.g.mk = function () {
   return mkWithVis(tag.g);
+}
+// this is used for importing a svg document into ProtoPedia
+
+tag.set("svgDoc",SvgElement.mk()).__namedType();
+
+tag.svgDoc.mk = function (content) {
+  this.content = content;
+}
+
+
+tag.svgDoc.__svgStringR = function (dst) {
+  let el;
+  if (this.__hidden()) {
+    return;
+  }
+  el = this.__element;
+  if (el) {
+    dst[0] += this.content;
+  }
 }
 
 
@@ -483,15 +505,15 @@ Transform.svgString = function () {
   let tr = this.translation;
   let sc;
   if (tr) {
-    rs += 'translate('+tr.x+' '+tr.y+')'
+    rs += 'translate('+lessDigits(tr.x)+' '+lessDigits(tr.y)+')'
   }
   sc = this.scale;
   if (typeof sc === 'number') {
     if (sc!==1) {
-      rs += 'scale('+sc+')';
+      rs += 'scale('+lessDigits(sc)+')';
     }
   } else if (sc) {
-    rs += 'scale('+sc.x+' '+sc.y+')';
+    rs += 'scale('+lessDigits(sc.x)+' '+lessDigits(sc.y)+')';
   }
   rs += '"';
   return rs;
