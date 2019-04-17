@@ -772,4 +772,4 @@ core.ObjectNode.getData  = function () {
   return this.data;
 }
 
-export {Style,removeElement};
+export {Style,removeElement,parseWithDOM};

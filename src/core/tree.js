@@ -1712,8 +1712,8 @@ const numericalSuf = function (string) {
   return Number(string);
 }
 
-const numZeros = function (n) { // how many zeros after decimal point for numbers less than 1
-  return (n>=1)?0:numZeros(10*n)+1;
+const numZeros = function (n) { // how many zeros after decimal point for numbers less than 1 and  > 0
+  return (n < 0.00000001) || (n>=1)?0:numZeros(10*n)+1;
 }
     
 // c = max after decimal place, if abs(1) ow num digits after the zeros

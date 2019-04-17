@@ -73,6 +73,7 @@ const setSvgMain = function (node) {
 }
 
 const fullUpdate = () => {
+  debugger;
   svgMain.updateAndDraw();
 }
 
@@ -487,7 +488,13 @@ Rectangle.toRect = function () {
   let rs = tag.rect.mk();
   rs.__enactBounds(this);
 }
-  
+
+const lessStringData = function (str) {
+  let reg = /=\"(-?\d*\.?\d*)\"/g;
+  let m = [...str.matchAll(reg)];
+ // debugger;
+  return m;
+}
 tag.rect.__svgStringR = function (dst) {
   let el;
   if (this.__hidden()) {
