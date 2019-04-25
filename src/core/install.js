@@ -178,7 +178,6 @@ const dependenciesEvaluated = function (src) {
 // but can use that single  part as PTOP instead.
 
  const assemblyParts = function (item) { 
-    debugger;
     let ownprops = Object.getOwnPropertyNames(item);
     let candidates = [];
     ownprops.forEach((prop) => {

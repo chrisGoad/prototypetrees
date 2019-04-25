@@ -73,7 +73,6 @@ const setSvgMain = function (node) {
 }
 
 const fullUpdate = () => {
-  debugger;
   svgMain.updateAndDraw();
 }
 
@@ -153,7 +152,6 @@ SvgElement.__bringToFront = function () {
 }
 
 SvgElement.__moveToBack = function () {
-  debugger;
   let el = this.__element;
   let pel;
   let exceptThis = [];
