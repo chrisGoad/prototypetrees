@@ -32,12 +32,13 @@ const descendantWithRole = function (item,role,roles) {
 }
 
 const ancestorWithRole = function (item,role,roles) {
-  return findAncestor(item,function (node) {
+  let rs = findAncestor(item,function (node) {
     let nodeRole = node.role;
     if ((role && nodeRole === role) ||
         (roles && (roles.findIndex((candidate) => candidate === nodeRole))>-1)) {
       return node;
     }}); 
+  return rs;
 }
 
 
