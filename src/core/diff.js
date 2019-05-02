@@ -20,7 +20,7 @@ vars.debugDiff = false;
 
 const diffDebug = (msg) => {
   if (vars.debugDiff) {
-    console.log('DEBUG DIFF ',msg);
+    console.log('DEBUG DIFF ',msg); //keep
     debugger;//keep
   }
 }

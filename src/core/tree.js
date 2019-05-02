@@ -1743,7 +1743,6 @@ const nDigits = function (n,d) {
   }
   ln = ns.length;
   if ((ln - dp -1)<=d) {
-    console.log('ns',ns);
     return ns;
   }
   bd = ns.substring(0,dp);

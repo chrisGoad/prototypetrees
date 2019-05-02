@@ -764,7 +764,9 @@ const allocateHighlights = function (n) {
   }
 }
 
-const highlightNode = function (node,highlight) {
+let highlightBounds;
+
+const highlightNode = function (node,highlight,isExtra) {
   let bounds,root,ebounds;
   if (!node.bounds) {
     return;
@@ -772,6 +774,9 @@ const highlightNode = function (node,highlight) {
   bounds = node.bounds(core.root);//svgMain);
   if (bounds) {
     ebounds = bounds.expandBy(20,20);
+    if (isExtra) {
+      highlightBounds = ebounds;
+    }
     highlight.style.display = "block";
     let extent,corner;
     ({extent,corner} = ebounds);
@@ -797,19 +802,22 @@ const highlightExtraNode = function (node) {
       return;
     } else if (node) { // replace the node begin highlighted
       highlightedNodes.pop();
-      highlightNode(node,highlights[ln-1]);
+      highlightNode(node,highlights[ln-1],true);
       extraNodeHighlighted = node;
     } else {
       highlights[ln-1].style.display = "none";
       highlightedNodes.pop();
       extraNodeHighlighted = undefined;
+      highlightBounds = undefined;
+
     }
   } else if (node) { // add a node to highlight
     allocateHighlights(ln+1);
-    highlightNode(node,highlights[ln]);
+    highlightNode(node,highlights[ln],true);
     extraNodeHighlighted = node;
   } else {
     extraNodeHighlighted = undefined;
+    highlightBounds = undefined;
   }
 } 
   
@@ -1404,6 +1412,6 @@ core.afterRestoreStateHooks.push(fullUpdate);
 const stdTransferredProperties = ['stroke','stroke-width','fill','role','text'];
 
 
-export {SvgRoot,SvgElement,tag as SvgTag,setSvgMain,svgMain,unhighlight,svg,highlightNodes,
+export {SvgRoot,SvgElement,tag as SvgTag,setSvgMain,svgMain,unhighlight,svg,highlightNodes,highlightBounds,
         highlightExtraNode,centerOnOrigin,fullUpdate,stdTransferredProperties,installRoot,
         defaultTextPropertyValues,textProperties};
