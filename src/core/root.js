@@ -12,7 +12,7 @@ const ObjectNode = {};
 const ArrayNode = [];
 
 //export {ObjectNode,ArrayNode};
-// codeRoot is the root of the ProtoPedia realm, relative to which paths are computed
+// codeRoot is the root of the PrototypeJungle realm, relative to which paths are computed
 // root is the root of the current item (the item that becomes visible in the UI)
 
 

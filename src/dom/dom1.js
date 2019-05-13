@@ -271,7 +271,7 @@ Element.__addToDom1 = function (itag,rootEl) {
   tag = itag?itag:this.tagOf();
   cel = forSvg?document.createElementNS("http://www.w3.org/2000/svg",tag):document.createElement(tag);
   this.__element = cel;
-  cel.__protoPediaElement = this;
+  cel.__prototypeJungleElement = this;
   this.__setAttributes(tag,forSvg);
   if (!pel || !pel.appendChild) {
      core.error('dom','unexpected condition'); 
@@ -668,7 +668,7 @@ Element.__rootElement = function () { // find the most distant ancestor which is
   }
 }
   
-  // dom events are transduced into protopedia events if they are listened for  (not in use as of 2/18)
+  // dom events are transduced into PrototypeJungle events if they are listened for  (not in use as of 2/18)
   
 const findAncestorListeningFor = function (nd,evn) {
   let cv = nd;
@@ -682,7 +682,7 @@ const findAncestorListeningFor = function (nd,evn) {
   }
 }
 const eventTransducer = function (e) {
-  let trg = e.target.__protoPediaElement;
+  let trg = e.target.__prototypeJungleElement;
   let evn = e.type;
   let ev = core.Event.mk(trg,"dom_"+evn);
   ev.domEvent = e;

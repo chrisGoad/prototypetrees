@@ -1,7 +1,7 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
-// minimal utilities needed for a ProtoPedia web page (used in the minimal and firebase_only modules)
+// minimal utilities needed for a PrototypeJungle web page (used in the minimal and firebase_only modules)
 
 
 // p might be a string or array of strings; if the latter, returns  true if it ends in any

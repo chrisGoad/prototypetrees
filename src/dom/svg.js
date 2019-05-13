@@ -335,7 +335,7 @@ tag.g.__domTransfers =svgCommonTransfers;
 tag.g.mk = function () {
   return mkWithVis(tag.g);
 }
-// this is used for importing a svg document into ProtoPedia
+// this is used for importing a svg document into PrototypeJungle
 
 tag.set("svgDoc",SvgElement.mk()).__namedType();
 
@@ -844,6 +844,7 @@ const unhighlight = function () {
     node.__highlight = undefined;
   });
   extraNodeHighlighted = undefined;
+  highlightBounds = undefined;
 }
   
 
@@ -1209,7 +1210,7 @@ SvgElement.mk = function (s) {
 }
   
 SvgRoot.eventToNode = function (e) {
-  return e.target.__protoPediaElement;
+  return e.target.__prototypeJungleElement;
 }
 
 

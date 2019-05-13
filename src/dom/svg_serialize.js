@@ -3,7 +3,7 @@
 
 vars.svgIncludeIds = true;
 
-// svg serialization:for writing out the svg dom as a string, so that it can be shown independent of protopedia
+// svg serialization:for writing out the svg dom as a string, so that it can be shown independent of PrototypeJungle
 /* Example use:
   dom.svgMain.svgString(200,10);
 */

@@ -11,7 +11,7 @@
 \*/
 
 
-// modified by cg to build protopedia dom.Elements rather than plain javascript object trees
+// modified by cg to build PrototypeJungle dom.Elements rather than plain javascript object trees
 function parseText (sValue) {
   if (/^\s*$/.test(sValue)) { return null; }
   if (/^(?:true|false)$/i.test(sValue)) { return sValue.toLowerCase() === "true"; }

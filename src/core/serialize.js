@@ -24,12 +24,13 @@
  
  *  An external is described by string of one the forms:  [<built-in>]/<path> or [<url>]/<path>
  *
- *  The built-ins for the ProtoPedia application are things like "geom", and "ui". For example, "/geom/Point" refers to
+ *  The built-ins for the PrototypeJungle application are things like "geom", and "ui". For example, "/geom/Point" refers to
  *  the  Point prototype as defined in pj.geom. Any prototype tree which contains Points will define a code 
  *  which is assigned  the value "/geom/Point" in R.externals.
  *
  *  For a separately loaded item, [source] denotes the URl from which it was loaded.  URLs come in two forms: <path> (eg /shape/arrow.js),
- *  and (username)<path> (eg (sys)/test/circle.js). The former denotes a path in protopedia's own repository (https://protopedia/repo1),
+ *  and (username)<path> (eg (sys)/test/circle.js). 
+ *  The former denotes a path in PrototypeJungle's own repository (https://prototypejungle.org/repo1),
  and latter a path in the repository of the given user.
  *
  *  In either case,   <path> specifies the sequence of selections which yield the referred-to object when starting with the external object.

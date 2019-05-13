@@ -16,7 +16,7 @@
 /* first, the error handler (throw doesn't work, since much of the activity is invoked from async callbacks) */
 
 let debugInstall = false;
-// this is true if a hust of 127.0.0.1:3000 indicates running protopedia itself locally. This is turned off for export.
+// this is true if a hust of 127.0.0.1:3000 indicates running prototypejungle itself locally. This is turned off for export.
 vars.local = beginsWith(window.location.host,'127');
 
 const installDebug = function () {
@@ -173,7 +173,7 @@ const dependenciesEvaluated = function (src) {
 }
 
 // items have their surface parts (eg a circle and lozeng), and then the prototypes object which holds their prototypes. We want to be able to load
-// such items into a protopedia state, which involves adding the prototypes of the item to the main prototypes object, creating a prototype PTOP with the given parts
+// such items into a  prototypejungle state, which involves adding the prototypes of the item to the main prototypes object, creating a prototype PTOP with the given parts
 // (in our example a circle and lozenge), and then adding PTOP to the main prototypes object as well. If there is only one part, we need not built a tree for PTOP,
 // but can use that single  part as PTOP instead.
 
@@ -238,6 +238,7 @@ const require1 = function (requester,sources) {
   }
   let satisfiedDependency = false;
   sources.forEach(function (src) {
+    debugger;
     let isItem = endsIn(src,'.item');
     if (endsIn(src,'.jpg')) { // afterImageUrl set in the UI
       installDebug();
@@ -375,7 +376,7 @@ let require = function () {
     let thisDomain =  (vars.local?'http://':'https://')+window.location.host + '/';
     let fullRequire = thisScript.src;
     if (beginsWith(fullRequire,thisDomain)) {
-       let servedFromPJ = (thisDomain === 'https://prototypejungle.org/') || (thisDomain === 'https://protopedia.org/') || vars.local;
+       let servedFromPJ = (thisDomain === 'https://prototypejungle.firebaseapp.com/')  || vars.local;
      cRequire = (servedFromPJ)?fullRequire.replace(thisDomain,'/'):fullRequire;
     } else {
       cRequire = vars.inverseMapUrl(fullRequire);
@@ -383,6 +384,7 @@ let require = function () {
   } else { // this case occurs only when install is from the  code_editor
     cRequire = currentRequire;
   }
+  debugger;
   evaluatedScripts[cRequire] = 1;
   installDebug();
   let numRequires;
