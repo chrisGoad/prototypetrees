@@ -238,7 +238,6 @@ const require1 = function (requester,sources) {
   }
   let satisfiedDependency = false;
   sources.forEach(function (src) {
-    debugger;
     let isItem = endsIn(src,'.item');
     if (endsIn(src,'.jpg')) { // afterImageUrl set in the UI
       installDebug();
@@ -384,7 +383,6 @@ let require = function () {
   } else { // this case occurs only when install is from the  code_editor
     cRequire = currentRequire;
   }
-  debugger;
   evaluatedScripts[cRequire] = 1;
   installDebug();
   let numRequires;

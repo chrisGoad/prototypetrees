@@ -891,7 +891,8 @@ tag.circle.__getExtent = function () {
 tag.circle.__svgStringR = primSvgStringR;
 
 tag.set("text",SvgElement.mk()).__namedType();
-tag.text.set({"font-family":"Arial","font-size":"10",fill:"black","stroke-width":0.5});
+tag.text.set({"font-family":"Arial","font-size":"10",fill:"black","stroke-width":0.5,"text-anchor":"middle","alignment-baseline":"central"});
+//tag.text.set({"font-family":"Arial","font-size":"10",fill:"black","stroke-width":0.5,"alignment-baseline":"central"});
 tag.text.mk = function (txt) {
   let rs = mkWithVis(tag.text);
   if (txt!==undefined) {
@@ -900,7 +901,11 @@ tag.text.mk = function (txt) {
   return rs;
 }
 
-tag.text.__domTransfers =  svgCommonTransfers.concat(['x','y','stroke-width','font-style','font-weight','font-family','font-size','text-anchor']);
+tag.text.__domTransfers =  
+svgCommonTransfers.concat(['x','y','stroke-width','font-style','font-weight','font-family',
+                          //'font-size','alignment-baseline']);
+                          'font-size','alignment-baseline','text-anchor']);
+
 
 tag.text.update = function () {
   let d = this.__data;
