@@ -669,7 +669,10 @@ Rectangle.sides = function () {
 // intersects the rectangle. Used in graph construction interface. Could be optimized in several ways
 // retuns {interesection:Point,side:integer,sideFraction:real}. sideFraction is the fraction  of the way along the side
 // at which the interesection point appears.
-Rectangle.peripheryAtDirection = function(direction) {  
+let rp_time = 0;
+
+Rectangle.peripheryAtDirection = function(direction) {
+  let tms = Date.now();
   let sides = this.sides();
   let dim = 2*Math.max(this.extent.x,this.extent.y);
   let center = this.center();
@@ -679,6 +682,7 @@ Rectangle.peripheryAtDirection = function(direction) {
     let intersection = line.intersect(sides[i]);
     if (intersection) {
       let fractionAlong =  ((intersection.difference(side.end0)).length())/(side.length());
+      rp_time += Date.now() - tms;
       return {intersection,side:i,sideFraction:fractionAlong};
     }
   }
@@ -1038,4 +1042,4 @@ Rectangle.randomPoint = function () {
 
 
 export {movetoInGlobalCoords,toOwnCoords,toPoint,angleToDirection,Point,Rectangle,Transform,
-        LineSegment,boundsForRectangles};
+        LineSegment,boundsForRectangles,rp_time};

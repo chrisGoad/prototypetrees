@@ -11,7 +11,8 @@ const toRole = function (roles) { //temporary during transition from roles to ro
   return roles;
 }
 
-const descendantWithRole = function (item,role,roles) {  
+let descendantRoleSearchEnabled = true; // a fancy feature that might prove confusing; if this var is false,only consider the item
+const descendantWithRole = function (item,role,roles) {      
   let rs;
   const recurser = (node) => {
     if (node.__name === 'prototypes') return undefined;
@@ -21,7 +22,11 @@ const descendantWithRole = function (item,role,roles) {
       rs = node;
       throw nul;
     } else {
-      forEachTreeProperty(node,recurser);
+      if (descendantRoleSearchEnabled) {
+        forEachTreeProperty(node,recurser);
+      } else {
+        throw nul;
+      }
     }
   }
   try {
@@ -33,6 +38,9 @@ const descendantWithRole = function (item,role,roles) {
 
 const ancestorWithRole = function (item,role,roles) {
   let rs = findAncestor(item,function (node) {
+   // if ((!descendantRoleSearchEnabled) && (node.unselectable || node.neverselectable)) {
+   //   return false;
+   // }
     let nodeRole = node.role;
     if ((role && nodeRole === role) ||
         (roles && (roles.findIndex((candidate) => candidate === nodeRole))>-1)) {
@@ -211,5 +219,5 @@ ObjectNode.copy = function (placeUnder) {
   return copyItem(this,placeUnder);
 }
 
-export {propagateDimension,containingKit,transferState,replace,toRole,
+export {propagateDimension,containingKit,transferState,replace,toRole,descendantRoleSearchEnabled,
         descendantWithRole,ancestorWithRole,copyItem,hasRole,afterReplaceHooks};

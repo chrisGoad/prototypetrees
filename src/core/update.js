@@ -76,7 +76,6 @@ ObjectNode.__update = function () {
   if (updateFilter  && !updateFilter(this)) {
     return;
   }
-  debugger;
   let inhs = inheritors(this);
   if (inhs.length > 1) {
     inhs.forEach((inh) => {

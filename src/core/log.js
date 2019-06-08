@@ -45,6 +45,25 @@ const tlog = function () {
   rs = 'At '+elapsed+': '+aa.join(', ');
   console.log(rs); //keep
 }
-export {log,tlog};
+
+const timers = {};
+const advanceTimer = function (nm,v) {
+  let cv = timers[nm];
+  if (cv === undefined) {
+    cv = [0,0];
+    timers[nm] = cv;
+  }
+  cv[0] = cv[0]+1;
+  cv[1] = cv[1] + v;
+}
+
+const resetTimer = function (nm) {
+  timers[nm] = 0;
+}
+
+
+export {log,tlog,advanceTimer,resetTimer,timers};
+
+
 
 

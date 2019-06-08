@@ -618,6 +618,9 @@ SvgElement.boundsWithHidden = function (rt) {
   }
 }
 
+core.ArrayNode.boundsWithHidden = SvgElement.boundsWithHidden;
+
+
 /* returns bound of this in the coordinates of rt, if rt is supplied; ow in this's own coords */
 SvgElement.bounds = function (rt) {
   core.log('bounds','getBounds');

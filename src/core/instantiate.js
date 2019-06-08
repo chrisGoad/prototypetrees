@@ -70,7 +70,7 @@ const markCopyTree = function (node) {
   }
 }
 
-/* Compute the prototype chain for node - an explicit array of the prototypes.
+/* Compute the prototype chain for a node - an explicit array of the prototypes.
  * The argument chainNeeded is true when addToChain is called from an object up the chain, rather than the tree recursor
  * We don't bother with chains of length 1.
  */
