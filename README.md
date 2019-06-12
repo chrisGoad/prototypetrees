@@ -2,7 +2,7 @@
 
 The code in this repository implements a new kind of JavaScript component: the prototype tree.
  
-[Prototypical inheritance](https://prototypejungle.org/doc/inherit.html) is central to JavaScript. However, in normal practice, prototype structure is missing from stored (e.g, [JSON](https://www.json.org/)) versions of objects. Prototype trees, however, retain prototype structure when stored. [Here](https://medium.com/dailyjs/prototype-trees-as-javascript-components-fad6c8fb4454) is a technical description.
+[Prototypical inheritance](https://prototypejungle.org/doc/inherit.html) is central to JavaScript. However, in normal practice, prototype structure is missing from stored (e.g, [JSON](https://www.json.org/)) versions of objects. Prototype trees, however, retain prototype structure when stored. [Here](https:prototypejungle.org/persistence.html) is a technical description.
 
 Included  in this repository is the implementation of prototype trees in general, but also as elaborated for a particular domain: 2d visual structures rendered via SVG. 
 

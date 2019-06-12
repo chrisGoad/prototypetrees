@@ -120,7 +120,7 @@ const transferState = function (dest,src,settings,own=true,forCopy) {
     transferExtent(dest,src,own);
   }
   if (settings) {
-    dest.set(settings);
+    dest.setIfMissing(settings);
   }
 }
 

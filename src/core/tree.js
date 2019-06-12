@@ -527,6 +527,18 @@ const setPropertiesIfMissing = function (dest,source,props,fromOwn) {
   return dest;
 }
 
+
+ObjectNode.setIfMissing = function (settings) {
+  let pnames = Object.getOwnPropertyNames(settings);
+  pnames.forEach( (prop) => {
+    let vl = this[prop];
+    if (vl === undefined) {
+      this[prop] = settings[prop];
+    }
+  });
+}
+
+
 // only for atomic values
 const getProperties = function (source,props) {
   let rs = ObjectNode.mk();

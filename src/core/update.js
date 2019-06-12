@@ -87,6 +87,9 @@ ObjectNode.__update = function () {
   }
   preUpdateHooks.forEach((f) => {f(this)});
   log('update','__updating ',this.__name);
+  if (isPrototype(this)) {
+      debugger;
+    }
   if (catchUpdateErrors) {
     try {
       this.update.apply(this,arguments);     
