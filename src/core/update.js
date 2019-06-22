@@ -107,6 +107,13 @@ ObjectNode.__update = function () {
     this.__updateCount = 1;
   }
 }
+
+ObjectNode.__initialize = function () {
+  if (this.initialize) {
+    this.initialize();
+  }
+}
+
 const forEachPart = function (node,fn,filter) {
   forEachTreeProperty(node,function (child) {
     if (child.update) {
@@ -340,6 +347,18 @@ const restoreComputed = function (node,stash) {
     }
   }
 }
-
+/*
+const addInitializer = function (itm,fn) {
+  debugger;
+  if (!itm.initializers) {
+    itm.initializers = [];
+  }
+  let inits = itm.initializers;
+  if (!(inits.includes(fn))) {
+    inits.push(fn);
+  }
+}
+*/
+  
 export {updateRoot,updateParts,isComputed,setUpdateFilter,setDisplayError,displayError,getData,setDataString,
 removeComputed,restoreComputed,resetComputedArray,resetComputedObject,declareComputed};

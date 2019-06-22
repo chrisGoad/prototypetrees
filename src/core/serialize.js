@@ -51,7 +51,6 @@ const externalAncestor = function (x,root) {
   } else {
     let parent = getval(x,'__parent');
     if (parent) {
-      //return externalizedAncestor(parent,root);
       return externalAncestor(parent,root);
     } else {
       return undefined;
@@ -87,7 +86,7 @@ const referencePath = function (x,root) {
   }
   builtIn = getval(extAncestor,'__builtIn');
   if ( !builtIn) {
-    componentPath = externalReference(extAncestor); //findComponent(extAncestor,repo);
+    componentPath = externalReference(extAncestor); 
     if ( !componentPath) {
       throw(Exception.mk('Not in a require',x));
     }
@@ -250,20 +249,6 @@ const encode = function (root) {
         }
       }
     }
-    /*
-    if (ArrayNode.isPrototypeOf(x)) {
-      debugger; //keep
-      let ln = x.length;
-      for (let i=0;i<ln;i++) {
-        addToResult(i,atomic);
-      }
-      if (atomic) {
-        addToResult('__name',true);
-      } else {
-        addToResult('__parent',false);
-      }
-      return rs;
-    }*/
     let propNames = Object.getOwnPropertyNames(x);
     rs = undefined;
     let isArray = ArrayNode.isPrototypeOf(x);

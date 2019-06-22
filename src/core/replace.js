@@ -120,7 +120,8 @@ const transferState = function (dest,src,settings,own=true,forCopy) {
     transferExtent(dest,src,own);
   }
   if (settings) {
-    dest.setIfMissing(settings);
+    dest.set(settings);
+    //dest.setIfMissing(settings);
   }
 }
 
@@ -170,7 +171,7 @@ const ireplace = function (replaced,replacementProto,climbCount,settings) {
     replacement.moveto(position);
   }
   // if replaced is in the prototype tree, cause all of the inheritors to inherit from the replacement
-  if (inPrototypesTree) {
+  if (inPrototypesTree)    {
     forInheritors(replaced,function (ireplaced) {
       if (ireplaced === replaced) { // any node counts as an inheritor of itself - we're  only interested in strict inheritors
         return;
@@ -184,9 +185,9 @@ const ireplace = function (replaced,replacementProto,climbCount,settings) {
 let afterReplaceHooks = [];
 
 const replace = function (replaced,replacementProto,climbCount,settings) {
-  let links = crossTreeLinks();
+ // let links = crossTreeLinks();
   let rs = ireplace(replaced,replacementProto,climbCount,settings);
-  installLinks(links);
+ // installLinks(links);
   afterReplaceHooks.forEach( (fn) => fn());
   return rs;
 }

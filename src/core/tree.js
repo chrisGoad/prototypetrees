@@ -812,7 +812,7 @@ const forEachTreeProperty = function (node,fn,includeLeaves,includeExternals) {
     node.forEach(perChild);
   } else {
     let ownprops = Object.getOwnPropertyNames(node);
-    ownprops.forEach(perChild.bind(undefined,undefined));
+    ownprops.forEach((prop) => perChild(undefined,prop));
   }
   return this;
 }
@@ -1852,37 +1852,8 @@ vars.installPrototypeDisabled = false;
 
 // in the standard setup, the protypes are kept together under root.prototypes
 // accepts either  of the forms installPrototype(proto) or installPrototype(id,proto)
-const installPrototype_old = function (idOrProto0,idOrProto1,forceInstantiate) {
-  if (vars.installPrototypeDisabled) {
-    return;
-  }
-  let id,proto;
-  if (idOrProto1 == undefined) {
-    id = 'proto0';
-    proto = idOrProto0;
-  } else {
-    id = idOrProto0;
-    proto = idOrProto1;
-  }
-  let protos = root.prototypes;
-  if (!protos) {
-    root.set('prototypes',newItem());
-  }
-  let anm = autoname(root.prototypes,id);
-  if (getval(proto,'__parent')) { // already present
-    root.prototypes[anm] = proto;
-    //proto.__isPrototype = true;
-    return proto;
-  }
-  log('install','Adding prototype '+anm);
-  let iproto = (forceInstantiate || proto.__get('__sourceUrl'))?proto.instantiate():proto;
-  if (iproto.hide) {
-    iproto.hide();
-  }
-  //iproto.__isPrototype = true;
-  root.prototypes.set(anm,iproto);
-  return iproto;
-}
+
+  
  // the prototypes are kept together under root.prototypes
  
 const installPrototype = function (iid,iprotoProto) {
@@ -1901,14 +1872,54 @@ const installPrototype = function (iid,iprotoProto) {
     protos.visibility = "hidden";
   }
   let external = protoProto.__get('__sourceUrl');
-  let rs = external?protoProto.instantiate():protoProto;
-  rs.visibility = 'hidden'; // a forward reference of sorts
-  let anm = autoname(protos,id);
-  protos.set(anm,rs);
-  return rs;
+  if (external) {
+    let rs = protoProto.instantiate();
+   // let rs = external?protoProto.instantiate():protoProto;
+    rs.visibility = 'hidden'; // a forward reference of sorts
+    let anm = autoname(protos,id);
+    protos.set(anm,rs);
+    if (rs.initializePrototype) {
+      rs.initializePrototype();
+    }
+    return rs;
+  } else {
+    error('unexpected in installPrototype');
+  }
 }
 
+/* assignPrototypes(dest,nm,proto) is equivalent to 
+  let dproto = Object.getPrototypeOf(dest);
+  dproto[nm] = installPrototype(nm,proto);
+  
+  A series of pairs is supported assignPrototype(dest,nm1,proto1,nm2,protot2 ...)
+  used for the common pattern of assigning a replaceable prototype as a parameter in a a components
+*/
+
+
+const assignPrototypes = function (dest,...assignments) {
+  let dproto = dest;//Object.getPrototypeOf(dest);
+  let ln = assignments.length;
+  if (ln%2 === 1) {
+    error('expected assignPrototypes(dest,nm1,proto1,nm2,proto2...)');
+  }
+  let hln = ln/2;
+  for (let i=0;i<hln;i++) {
+    let nm = assignments[i*2];
+    let proto = assignments[i*2+1];
+    if (!dproto[nm]) {
+      dproto[nm] = installPrototype(nm,proto);
+    }
+  }
+}  
+
+
+const assignPrototype = function (dest,nm,proto) {
+  assignPrototypes(dest,nm,proto);
+}
+  
+   
 const replacePrototype = function (where,id,replacementProto) {
+  debugger;
   let replaced = where[id];
   let nm = replaced.__name;
   let protos = root.prototypes;
@@ -2037,5 +2048,6 @@ export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,cr
         isDescendantOf,findAncestor,ancestorWithProperty,ancestorWithPropertyFalse,ancestorWithPropertyTrue,ancestorWithPropertyValue,
         nDigits,evalPath,inheritors,forInheritors,pathToString,climbCount,pOf,setPropertiesIfMissing,
         isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,referencedPrototypes,removeUnusedPrototypes,
-        newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,deepCopy,allCrossLinks
+        newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,
+        deepCopy,allCrossLinks,assignPrototypes,assignPrototype
         };
