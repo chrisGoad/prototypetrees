@@ -1919,7 +1919,6 @@ const assignPrototype = function (dest,nm,proto) {
   
    
 const replacePrototype = function (where,id,replacementProto) {
-  debugger;
   let replaced = where[id];
   let nm = replaced.__name;
   let protos = root.prototypes;

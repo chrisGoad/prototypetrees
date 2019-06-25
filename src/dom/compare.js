@@ -487,9 +487,12 @@ Rectangle.toRect = function () {
   rs.__enactBounds(this);
 }
 
-
-
-
+const lessStringData = function (str) {
+  let reg = /=\"(-?\d*\.?\d*)\"/g;
+  let m = [...str.matchAll(reg)];
+ // debugger;
+  return m;
+}
 tag.rect.__svgStringR = function (dst) {
   let el;
   if (this.__hidden()) {
@@ -500,29 +503,7 @@ tag.rect.__svgStringR = function (dst) {
     dst[0] += this.__outerHTML();
   }
 }
-
-
-
   
-tag.set("ellipse",SvgElement.mk()).__namedType();
-tag.ellipse.__domTransfers = svgCommonTransfers.concat(['rx','ry','width','height']);
-
-
-
-tag.ellipse.setColor = function (color) {
-  this.fill = color;
-}
-
-tag.ellipse.__svgStringR = primSvgStringR;
-
-
-const lessStringData = function (str) {
-  let reg = /=\"(-?\d*\.?\d*)\"/g;
-  let m = [...str.matchAll(reg)];
- // debugger;
-  return m;
-}
-
   
 Transform.svgString = function () {
   let rs = 'transform="'
