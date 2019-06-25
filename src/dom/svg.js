@@ -15,7 +15,6 @@ let svgNamespace = "http://www.w3.org/2000/svg";
 // a Root is separate svg element. At the moment only one is in use: svgMain
 let SvgRoot = Object.create(Element).__namedType();
 
-  
 SvgRoot.mk = function (container) {
   let rs = Object.create(SvgRoot);
   let cel,wd,ht;
