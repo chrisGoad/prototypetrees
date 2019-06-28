@@ -907,14 +907,15 @@ const crossTreeLinks = function (onode=root) {
   }
   recurse(onode);
   return accum;
-}
-           
-      
-    
+  }
 
 
 const installLinks = function (links) {
   links.forEach(function (link) {
+    // we want to preserve the links to prototypes
+    if (link[2][0] === 'prototypes') {
+      return;
+    }
     let node = evalPath(link[0]);
     let prop = link[1];
     let child = evalPath(link[2]);
@@ -1872,19 +1873,19 @@ const installPrototype = function (iid,iprotoProto) {
     protos.visibility = "hidden";
   }
   let external = protoProto.__get('__sourceUrl');
-  if (external) {
-    let rs = protoProto.instantiate();
-   // let rs = external?protoProto.instantiate():protoProto;
-    rs.visibility = 'hidden'; // a forward reference of sorts
-    let anm = autoname(protos,id);
-    protos.set(anm,rs);
-    if (rs.initializePrototype) {
-      rs.initializePrototype();
-    }
-    return rs;
-  } else {
-    error('unexpected in installPrototype');
+ // if (external) {
+ // let rs = protoProto.instantiate();
+  let rs = external?protoProto.instantiate():protoProto;// assemblies will not be external
+  rs.visibility = 'hidden'; // a forward reference of sorts
+  let anm = autoname(protos,id);
+  protos.set(anm,rs);
+  if (rs.initializePrototype) {
+    rs.initializePrototype();
   }
+  return rs;
+ // } else {
+ //   error('unexpected in installPrototype');
+  //}
 }
 
 /* assignPrototypes(dest,nm,proto) is equivalent to 

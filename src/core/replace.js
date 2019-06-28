@@ -185,9 +185,9 @@ const ireplace = function (replaced,replacementProto,climbCount,settings) {
 let afterReplaceHooks = [];
 
 const replace = function (replaced,replacementProto,climbCount,settings) {
- // let links = crossTreeLinks();
+  let links = crossTreeLinks();
   let rs = ireplace(replaced,replacementProto,climbCount,settings);
- // installLinks(links);
+  installLinks(links);
   afterReplaceHooks.forEach( (fn) => fn());
   return rs;
 }
