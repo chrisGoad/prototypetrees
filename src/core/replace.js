@@ -70,10 +70,10 @@ const transferExtent = function (dest,src,own) {
   if (Number(destDim)) {
     if (dim) {
       dest.dimension = dim;
-    }
-    if (width) {
+    } else if (width) {
       dest.dimension = Math.max(width,height);
     }
+    propagateDimension(dest);
     return;
   }
   if (Number(dim)) {
