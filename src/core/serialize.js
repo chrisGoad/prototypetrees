@@ -224,12 +224,17 @@ const encode = function (root) {
         if (!serializeFunctions && (typeof v === 'function')  && !(v.serializeMe)) {
           return;
         }
-        if ((v === null)||(typeof v !== 'object')) {
+        let tpv = typeof v;
+
+        if ((v === null)||(tpv !== 'object')) {
           if (!rs) {
             rs = {};
           }
-          if (typeof v === 'function') {
+          if (tpv === 'function') {
             rs[prop] = [v.toString()];
+          } else if (tpv === 'number') {
+            rs[prop] = nDigits(v,5); 
+            console.log('number',rs[prop]);
           } else {
             rs[prop] = v;
           }

@@ -69,7 +69,7 @@ let currentHistoryIndex = -1;
 
 const canRedo = () => (history.length > (currentHistoryIndex + 1));
 
-  
+let useDiffs = false; // use of diffs doesn't work yet for saved histories.
 const saveState = function (kind) {
   //debugger;
   //console.log('saveState');
@@ -88,7 +88,7 @@ const saveState = function (kind) {
     } else {
       let lastState = history[mostRecentState()];
       let diffs = findAllDiffs(lastState.map);
-      if (diffs) { 
+      if (diffs  && useDiffs) { 
         if (diffs !== 'none') {
           history.push({diffs,kind});  // add a diff 
         }
@@ -293,6 +293,6 @@ async function installHistory(isrc,cb) {
 
   
 
-export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,
+export {history,historyFailed,afterHistoryFailureHooks,beforeSaveStateHooks,afterSaveStateHooks,saveState,useDiffs,
         gotoState,undo,next,canRedo,currentHistoryIndex,afterRestoreStateHooks,oneStep,animate,encodeHistory,
         githubTest,installHistory,beforeSerializeState,afterSerializeState};

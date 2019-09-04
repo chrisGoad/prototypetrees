@@ -293,6 +293,7 @@ const findAllDiffs = function (map) {
 }
 // installs the state represented by the map, without diffs
 const installMap = function (map) {
+  debugger;
   root = map[0].node2;
   let cnt = 0; // only for debugging
   map.forEach(function ({node1,node2}) {
@@ -337,6 +338,7 @@ const installMap = function (map) {
   
 
 const installDiffs = function (map,diffs) {
+  debugger;
   //let ln = map.length;
   for (let i in diffs) {
   //for (let i=0;i<ln;i++) {

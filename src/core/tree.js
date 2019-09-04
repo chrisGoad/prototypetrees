@@ -1498,7 +1498,21 @@ const forSomeInheritors = function (proto,fn) {
   return rs;
 }
  
-
+const garbageCollectPrototypes = function () {
+  let protos = root.prototypes;
+  if (!protos) {
+    return;
+  }
+  let props = [];
+  forEachTreeProperty(protos,(proto,prop) => {
+    let inh = inheritors(proto);
+    if (inh.length < 2) {
+      props.push(prop);
+    }
+  });
+  return props;
+}
+      
 
 // the first protopy in node's chain with property prop 
 const prototypeWithProperty = function (node,prop) {
@@ -1728,10 +1742,12 @@ const numericalSuf = function (string) {
 const numZeros = function (n) { // how many zeros after decimal point for numbers less than 1 and  > 0
   return (n < 0.00000001) || (n>=1)?0:numZeros(10*n)+1;
 }
-    
+
 // c = max after decimal place, if abs(1) ow num digits after the zeros
 const nDigits = function (n,d) {
   let ns,dp,ln,bd,ad,boost,boosted,rs;
+  //return n;
+ console.log('Z');
   if (typeof n !=="number") {
     return n;
   }
@@ -1745,23 +1761,47 @@ const nDigits = function (n,d) {
   let pow = Math.pow(10,d);
   let unit = 1/pow;
   let rounded = Math.round(boosted/unit)/pow;
+  console.log('rounded',rounded,'nzeros',nzeros,'boost',boost);
   ns = String(rounded);
   if (nzeros > 0) {
-    rs = rounded/boost;
-    return rs;
+    let fd,rd,minus;
+    if (n < 0) {
+      fd = ns[1];
+      rd = ns.substring(3);
+      minus = '-';
+    } else {
+      fd = ns[0];
+      rd = ns.substring(2);
+      minus = '';
+    }
+    //let spl = ns.split('.');
+    console.log('fd',fd,'rd',rd,'minus',minus);
+    rs = minus+"."+('0'.repeat(nzeros-1))+fd+rd; 
+    //return "."+fd+('0'.repeat(nzeros-1))+spl[1];
+    let rs2 = rounded/boost;
+    let diff = Math.abs(Number(rs)-n);
+    if (diff > 0.00001) {
+      console.log('diff',diff);
+      debugger;
+    }
+   // return n;
+   return Number(rs);
+    //return rs;
   }
   dp = ns.indexOf(".");
   if (dp < 0) {
-   return ns;
+    rs = ns;
+  } else {
+    ln = ns.length;
+    if ((ln - dp -1)<=d) {
+      rs = ns;
+    } else {
+      bd = ns.substring(0,dp);
+      ad = ns.substring(dp+1,dp+d+1)
+      rs = bd + "." + ad;
+    }
   }
-  ln = ns.length;
-  if ((ln - dp -1)<=d) {
-    return ns;
-  }
-  bd = ns.substring(0,dp);
-  ad = ns.substring(dp+1,dp+d+1)
-  rs = bd + "." + ad;
-  return rs;
+  return Number(rs);
 }
 
 ArrayNode.__copy = function (copyElement) {
@@ -1858,6 +1898,7 @@ vars.installPrototypeDisabled = false;
  // the prototypes are kept together under root.prototypes
  
 const installPrototype = function (iid,iprotoProto) {
+  debugger;
  let id,protoProto;
  // allow just one argument, the protoProto
  if (iprotoProto) {
@@ -1907,9 +1948,9 @@ const assignPrototypes = function (dest,...assignments) {
   for (let i=0;i<hln;i++) {
     let nm = assignments[i*2];
     let proto = assignments[i*2+1];
-    if (!dproto[nm]) {
+    //if (!dproto[nm]) {
       dproto[nm] = installPrototype(nm,proto);
-    }
+    //}
   }
 }  
 
@@ -2042,7 +2083,7 @@ const removeUnusedPrototypes = function () {
     
 
 
-export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,crossTreeLinks,
+export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,crossTreeLinks,garbageCollectPrototypes,
         mapNonCoreLeaves,treeProperty,mapOwnProperties,lift,forEachTreeProperty,stripInitialSlash,descendantWithProperty,
         isNode,ancestorHasOwnProperty,isAtomic,treeProperties,autoname,removeChildren,beforeChar,afterChar,
         isDescendantOf,findAncestor,ancestorWithProperty,ancestorWithPropertyFalse,ancestorWithPropertyTrue,ancestorWithPropertyValue,

@@ -1,6 +1,18 @@
 // Copyright 2019 Chris Goad
 // License: MIT
 
+
+// started, but not finished, obviously - cg 8/19
+const compressTheNumbers = function (str) {
+ /* let reg = RegExp('(\-*)(\d*)(\.*)(\d*)','g');
+  let matches = str.matchAll(reg);
+  for (const match of matches) {
+    debugger;
+  } */
+  return str;
+}
+
+  
 const  svg = codeRoot.set('svg',core.ObjectNode.mk());//just for supporting an old naming scheme svg.Element, as a synonym for dom.SvgElement
 const mkWithVis = function (pr) {
   let rs = Object.create(pr);
@@ -401,7 +413,9 @@ const primSvgStringR = function(dst) {
   }
   el = this.__element;
   if (el) {
-    dst[0] += this.__outerHTML();
+    let str = this.__outerHTML();
+    let cstr = compressTheNumbers(str);;
+    dst[0] += str;
   }
  }
   
@@ -412,6 +426,7 @@ tag.line.__svgStringR = function (dst) {
   }
   el = this.__element;
   if (el) {
+    
     dst[0] += this.__outerHTML();
   }
 }
