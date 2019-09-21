@@ -9,7 +9,6 @@ let domStash;
 let stateStash;
   
 const stashPreSave = function (itm,needRestore,removeComputed=true) {
-  debugger;
   stateStash = needRestore?{}:undefined;
   domStash = needRestore?{}:undefined;
   stashDom(itm,domStash);

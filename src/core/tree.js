@@ -1746,8 +1746,6 @@ const numZeros = function (n) { // how many zeros after decimal point for number
 // c = max after decimal place, if abs(1) ow num digits after the zeros
 const nDigits = function (n,d) {
   let ns,dp,ln,bd,ad,boost,boosted,rs;
-  //return n;
- console.log('Z');
   if (typeof n !=="number") {
     return n;
   }
@@ -1761,7 +1759,6 @@ const nDigits = function (n,d) {
   let pow = Math.pow(10,d);
   let unit = 1/pow;
   let rounded = Math.round(boosted/unit)/pow;
-  console.log('rounded',rounded,'nzeros',nzeros,'boost',boost);
   ns = String(rounded);
   if (nzeros > 0) {
     let fd,rd,minus;
@@ -1774,19 +1771,14 @@ const nDigits = function (n,d) {
       rd = ns.substring(2);
       minus = '';
     }
-    //let spl = ns.split('.');
-    console.log('fd',fd,'rd',rd,'minus',minus);
     rs = minus+"."+('0'.repeat(nzeros-1))+fd+rd; 
-    //return "."+fd+('0'.repeat(nzeros-1))+spl[1];
-    let rs2 = rounded/boost;
+    /*let rs2 = rounded/boost;
     let diff = Math.abs(Number(rs)-n);
     if (diff > 0.00001) {
       console.log('diff',diff);
-      debugger;
-    }
-   // return n;
+      debugger; //keep
+    }*/
    return Number(rs);
-    //return rs;
   }
   dp = ns.indexOf(".");
   if (dp < 0) {
@@ -1898,7 +1890,6 @@ vars.installPrototypeDisabled = false;
  // the prototypes are kept together under root.prototypes
  
 const installPrototype = function (iid,iprotoProto) {
-  debugger;
  let id,protoProto;
  // allow just one argument, the protoProto
  if (iprotoProto) {

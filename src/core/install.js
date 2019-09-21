@@ -210,8 +210,9 @@ const dependenciesEvaluated = function (src) {
      rs = svg.Element.mk('<g/>');
      rs.__assembly = true;
      candidates.forEach((c) => {
-       c.neverselectable = true;
-       let pos = c.getTranslation();
+       //c.neverselectable = true; 9/13
+      c.unselectable = true;
+      let pos = c.getTranslation();
        let nm = c.__name;
        c.__singleton = true; // has only one instance;means that this prototype need not be shown in the object-property panel nor used in copy
        rs.set(nm,c);
