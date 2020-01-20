@@ -1442,6 +1442,10 @@ nodeMethod('__root',function () {
 
 const inheritors = function (proto,filter) {
   let rs = [];
+  if (!isPrototype(proto)) {
+    rs.push(proto);
+    return rs;
+  }
   let root = proto.__root();
   let recurser = function (node,iproto) {
     if ((iproto === node) || proto.isPrototypeOf(node)) {
@@ -2078,7 +2082,7 @@ export {defineFieldAnnotation,nodeMethod,extend,setProperties,getval,internal,cr
         mapNonCoreLeaves,treeProperty,mapOwnProperties,lift,forEachTreeProperty,stripInitialSlash,descendantWithProperty,
         isNode,ancestorHasOwnProperty,isAtomic,treeProperties,autoname,removeChildren,beforeChar,afterChar,
         isDescendantOf,findAncestor,ancestorWithProperty,ancestorWithPropertyFalse,ancestorWithPropertyTrue,ancestorWithPropertyValue,
-        nDigits,evalPath,inheritors,forInheritors,pathToString,climbCount,pOf,setPropertiesIfMissing,
+        nDigits,evalPath,inheritors,forInheritors,pathToString,climbCount,pOf,setPropertiesIfMissing,pathOf,
         isObject,hasSource,findDescendant,stringPathOf,isPrototype,containingData,referencedPrototypes,removeUnusedPrototypes,
         newItem,setItemConstructor,installPrototype,replacePrototype,addToArrayHooks,
         deepCopy,allCrossLinks,assignPrototypes,assignPrototype

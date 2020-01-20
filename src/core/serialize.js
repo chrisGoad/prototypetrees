@@ -234,7 +234,6 @@ const encode = function (root) {
             rs[prop] = [v.toString()];
           } else if (tpv === 'number') {
             rs[prop] = nDigits(v,5); 
-            console.log('number',rs[prop]);
           } else {
             rs[prop] = v;
           }
