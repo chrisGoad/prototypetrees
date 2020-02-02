@@ -588,6 +588,58 @@ LineSegment.intersect = function (line1) {
   
 }
 
+let Circle = geomr.set("Circle",core.ObjectNode.mk()).__namedType();
+
+
+Circle.mk = function(center,radius) {
+  let rs = Object.create(Circle);
+  rs.set('center',center.copy());
+  rs.radius = radius;
+  return rs;
+}
+
+Circle.intersectLine = function (point,vec) {
+  let px = point.x;
+  let py = point.y;
+  let center = this.center;
+  let r = this.radius;
+  let cx = center.x;
+  let cy = center.y;
+  let vx = vec.x;
+  let vy = vec.y;
+  let qx = px-cx;
+  let qy = py-cy;
+  /* (qx + t*vx)*(qx + t*vx) + (qy + t*vy)*(qy + t*vy) = r*r
+  qx*qx + 2*t*vx*qx + t*t*vx*vx + qy*qy + 2*t*vy*qy + t*t*vy*vy 
+  
+  qy*qy + t * 2*(qx*vx +  qy*vy) + t*t * (vx + vy) = r*r */
+  let a =  vx*vx + vy*vy;
+  let b = 2*(qx*vx + qy*vy);
+  let c = qx*qx + qy*qy - r*r;
+  let sqz = b*b - 4*a*c;
+  if (sqz <= 0) {
+    console.log('no solution');
+    return undefined;
+  }
+  let z = Math.sqrt(sqz);
+  let t0 = (z - b)/(2*a);
+  let t1 = -(z+b)/(2*a);
+  let s0 = point.plus(vec.times(t0));
+  let s1 = point.plus(vec.times(t1));
+  let d0 = s0.distance(center);
+  let d1 = s1.distance(center);
+  console.log('distances',d0,d1);
+  return [s0,s1];
+}
+
+Circle.contains = function (point) {
+  let v = point.difference(Circle.center);
+  let {x,y}= v;
+  let r = circle.radius;
+  return (x*x + y*y) < r*r;
+}
+
+
 geomr.set("Rectangle",core.ObjectNode.mk()).__namedType();
 let Rectangle = geomr.Rectangle;
 // takes corner,extent or {corner:c,extent:e,style:s} style being optional, or no args
@@ -1042,4 +1094,4 @@ Rectangle.randomPoint = function () {
 
 
 export {movetoInGlobalCoords,toOwnCoords,toPoint,angleToDirection,Point,Rectangle,Transform,
-        LineSegment,boundsForRectangles,rp_time};
+        LineSegment,Circle,boundsForRectangles,rp_time};
