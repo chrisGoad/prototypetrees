@@ -512,6 +512,80 @@ Point.setXY = function (x,y) {
   }
 }
 
+
+geomr.set("Ray",core.ObjectNode.mk()).__namedType();
+
+
+let Ray = geomr.Ray;
+
+Ray.mk = function (point,vector) {
+  let rs = Object.create(Ray);
+  rs.point = point;
+  rs.vector = vector;
+  return rs;
+}
+
+/*intersecting Rays A and B
+
+
+let SLA = vay/vax;
+SLB = vby/vbx;
+suppose you go t units along a then that will get you SLA*t units up. and SLB units down. we are going up at SLA/SLB times as fast from A as we are down from B. Let R = SLA/SLB. The meeting spot will have (y-Ay) =  -R * (By -y); thus 
+
+y * (1 - R) = Ay- R*By;
+y * (1 + R) = Ay+ R*By;
+y * (1 - R) = Ay-  R*By;
+
+y = (Ay -  R*By)/(1 - R);
+y = (Ay + R*By)/(1 - R);
+
+Then (x,y) = t*vax + Ax,t*vay + Ay)
+y = t*vay + Ay;
+t = (y-Ay)/vay
+x = t*vax + Ax;
+
+SLB === 0 case:
+y = vby;
+t = (y - Ay)/vay = (
+*/
+
+
+Ray.intersectRay = function (RB) {
+ // let A = this;
+ //debugger;
+  let {point:A,vector:vA}  = this;
+  let {point:B,vector:vB}  = RB;
+  let {x:Ax,y:Ay} = A;
+  let {x:Bx,y:By} = B;
+  let {x:vax,y:vay} = vA;
+  let {x:vbx,y:vby} = vB;
+  let SLA = vay/vax;
+  let SLB = vby/vbx;
+  let y;
+  if (SLB === 0) {
+    if (SLA === 0) {
+      return undefined;
+    }
+    y = By;
+  } else {
+    let R = SLA/SLB;
+    if (R === 1) {
+      return undefined;
+    }
+    y = (Ay -  R*By)/(1 - R);
+  }
+
+  //let y = (Ay + R*By)/(1 - R);
+  let t = (y-Ay)/vay
+  let x = t*vax + Ax;
+ // debugger;
+  return Point.mk(x,y);
+  //console.log('Ay',Ay,'x',x,'y',y);
+}
+/*
+RA = Window.geom.Ray.mk(Point.mk(0,0),Point.mk(1,1));RB = Window.geom.Ray.mk(Point.mk(0,1),Point.mk(1,-1));RC = RA.intersectRay(RB);
+*/
+
 geomr.set("LineSegment",core.ObjectNode.mk()).__namedType();
 
 let LineSegment = geomr.LineSegment;
@@ -543,6 +617,11 @@ LineSegment.pointAlong = function (fraction) {
   return end0.plus(d.times(fraction));
 }
 
+LineSegment.middle = function () {
+  return this.pointAlong(0.5);
+}
+
+  
 LineSegment.intersect = function (line1) {
   let line0 = this;
   let x0 = line0.end0.x;
@@ -618,7 +697,6 @@ Circle.intersectLine = function (point,vec) {
   let c = qx*qx + qy*qy - r*r;
   let sqz = b*b - 4*a*c;
   if (sqz <= 0) {
-    console.log('no solution');
     return undefined;
   }
   let z = Math.sqrt(sqz);
@@ -628,7 +706,6 @@ Circle.intersectLine = function (point,vec) {
   let s1 = point.plus(vec.times(t1));
   let d0 = s0.distance(center);
   let d1 = s1.distance(center);
-  console.log('distances',d0,d1);
   return [s0,s1];
 }
 
@@ -1093,5 +1170,5 @@ Rectangle.randomPoint = function () {
 }
 
 
-export {movetoInGlobalCoords,toOwnCoords,toPoint,angleToDirection,Point,Rectangle,Transform,
+export {movetoInGlobalCoords,toOwnCoords,toPoint,angleToDirection,Point,Rectangle,Transform,Ray,
         LineSegment,Circle,boundsForRectangles,rp_time};
