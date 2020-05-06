@@ -716,6 +716,53 @@ Circle.contains = function (point) {
   return (x*x + y*y) < r*r;
 }
 
+geomr.set("Arc",core.ObjectNode.mk()).__namedType();
+let Arc = geomr.Arc;
+ 
+
+// two argument forms: center, angle0, angle1, or end0,end1,radius
+Arc.mk = function (center,angle0,angle1,radius) {
+	let rs = Object.create(Arc);
+	if (typeof angle0 === 'number') {
+	  rs.center = center;
+		rs.angle0 = angle0;
+		rs.angle1 = angle1;
+		rs.radius = radius;
+	} else {
+		let a = center;
+		let b = angle0;
+		let rv = angle1;
+		let r = Math.abs(rv);
+		let vec = b.difference(a);
+		let ln = vec.length();
+		let c = a.plus(vec.times(0.5));
+	  let excess = r -  (ln/2);
+		let vnrm = vec.times(1/ln);
+		let nrm = vnrm.normal();
+	  let cntr =c.plus(nrm.times(rv>0?excess:-excess));
+		rs.set('center',cntr);
+		let avec = a.difference(cntr);
+		let bvec = b.difference(cntr);
+		if  (1 || (r > 0)) {
+		  rs.angle0 = Math.atan2(avec.y,avec.x);
+		  rs.angle1 = Math.atan2(bvec.y,bvec.x);
+		} else {
+			rs.angle1 = Math.atan2(avec.y,avec.x);
+		  rs.angle0 = Math.atan2(bvec.y,bvec.x);
+		}
+		rs.radius = Math.abs(r);
+	}
+	return rs;
+}
+
+Arc.pointOn = function (fr) {
+	debugger;
+	let {center,angle0,angle1,radius} = this;
+	let angle = angle0 + fr*(angle1-angle0);
+	let vec = Point.mk(Math.cos(angle),Math.sin(angle));
+  let rs = center.plus(vec.times(radius));
+	return rs;
+}
 
 geomr.set("Rectangle",core.ObjectNode.mk()).__namedType();
 let Rectangle = geomr.Rectangle;
@@ -1171,4 +1218,4 @@ Rectangle.randomPoint = function () {
 
 
 export {movetoInGlobalCoords,toOwnCoords,toPoint,angleToDirection,Point,Rectangle,Transform,Ray,
-        LineSegment,Circle,boundsForRectangles,rp_time};
+        LineSegment,Circle,Arc,boundsForRectangles,rp_time};
